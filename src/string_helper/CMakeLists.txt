@@ -10,3 +10,5 @@ set_target_properties(string_helper PROPERTIES
 )
 	
 set_windows_version_definitions(string_helper ${TARGET_WINDOWS_VERSION} TRUE)
+
+target_link_libraries(string_helper PRIVATE platform_config)

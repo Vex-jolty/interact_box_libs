@@ -267,6 +267,10 @@ bool FileHelper::deleteFile(wstring fileName) {
 	return DeleteFile(fileName.c_str());
 }
 
+bool FileHelper::copyFile(wstring oldPath, wstring newPath) {
+	return CopyFileW(oldPath.c_str(), newPath.c_str(), false);
+}
+
 #else
 bool FileHelper::fileHasValidExtension(const string& fileName, vector<string> extensions) {
 	for (const auto& ext : extensions) {
@@ -529,6 +533,10 @@ long FileHelper::getFileSize(HANDLE hFile) {
 
 bool FileHelper::deleteFile(string fileName) {
 	return DeleteFileA(fileName.c_str());
+}
+
+bool FileHelper::copyFile(string oldPath, string newPath) {
+	return CopyFileA(oldPath.c_str(), newPath.c_str(), false);
 }
 
 BOOL WINAPI DllMain(

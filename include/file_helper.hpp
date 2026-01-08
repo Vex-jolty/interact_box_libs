@@ -58,6 +58,8 @@ class DllExport FileHelper {
 
 		static std::wstring getAppDataPath();
 
+		static bool copyFile(std::wstring oldPath, std::wstring newPath);
+
 		#else
 		static bool fileHasValidExtension(const std::string& fileName, std::vector<std::string> extensions);
 
@@ -103,4 +105,6 @@ class DllExport FileHelper {
 
 		
 		static bool deleteFile(std::string fileName);
+
+		static bool copyFile(std::string oldPath, std::string newPath);
 };

@@ -13,4 +13,4 @@ set_target_properties(json_helper PROPERTIES
 )
 set_windows_version_definitions(json_helper ${TARGET_WINDOWS_VERSION} TRUE)
   
-target_link_libraries(json_helper PRIVATE jsoncpp_static string_helper errors -static)
+target_link_libraries(json_helper PRIVATE platform_config jsoncpp_static string_helper errors)
