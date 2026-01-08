@@ -31,7 +31,7 @@ function(set_windows_version_definitions target version requires_additional_libs
 
 	if (version IN_LIST VERSIONS_THAT_REQUIRE_PTHREAD9X)
 		target_link_libraries(${target} INTERFACE pthread-9x)
-		target_compile_options(${target} INTERFACE -m32)
+		target_compile_options(${target} INTERFACE -m32 -march=i486)
 	else()
 		target_link_libraries(${target} INTERFACE winpthread)
 	endif()
@@ -132,3 +132,4 @@ add_subdirectory(src/string_helper)
 add_subdirectory(src/json_helper)
 add_subdirectory(src/process_helper)
 add_subdirectory(src/file_helper)
+add_subdirectory(src/logging_level)
