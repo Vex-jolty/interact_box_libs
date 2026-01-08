@@ -90,7 +90,7 @@ function(set_windows_version_definitions target version requires_additional_libs
 		_WIN32_WINDOWS=${_WIN32_WINDOWS_VAL}
 	)
 
-	if(${requires_additional_libs})
+	if(requires_additional_libs)
 		set(ADDITIONAL_LIBS atomic kernel32 mingw32 gcc gcc_eh stdc++ shell32 advapi32 mingwex)
 		if (NOT version IN_LIST VERSIONS_THAT_REQUIRE_MSVCRT40)
 			list(APPEND ADDITIONAL_LIBS uuid)
@@ -103,9 +103,13 @@ function(set_windows_version_definitions target version requires_additional_libs
 	endif()
 endfunction()
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
-
 add_library(platform_config INTERFACE)
+
+target_include_directories(platform_config INTERFACE
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	$<INSTALL_INTERFACE:include>
+)
+
 
 set_windows_version_definitions(platform_config ${TARGET_WINDOWS_VERSION} FALSE)
 
@@ -133,3 +137,40 @@ add_subdirectory(src/json_helper)
 add_subdirectory(src/process_helper)
 add_subdirectory(src/file_helper)
 add_subdirectory(src/logging_level)
+
+install(
+	TARGETS
+		platform_config
+		errors
+		index_helper
+		string_helper
+		json_helper
+		process_helper
+		file_helper
+		logging_level
+	EXPORT InteractBoxLibsTargets
+)
+
+install(
+	EXPORT InteractBoxLibsTargets
+	NAMESPACE InteractBoxLibs::
+	DESTINATION lib/cmake/InteractBoxLibs
+)
+
+install(
+	DIRECTORY include/
+	DESTINATION include
+)
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+	cmake/InteractBoxLibsConfig.cmake.in
+	${CMAKE_CURRENT_BINARY_DIR}/InteractBoxLibsConfig.cmake
+	INSTALL_DESTINATION lib/cmake/InteractBoxLibs
+)
+
+install(
+	FILES ${CMAKE_CURRENT_BINARY_DIR}/InteractBoxLibsConfig.cmake
+	DESTINATION lib/cmake/InteractBoxLibs
+)
