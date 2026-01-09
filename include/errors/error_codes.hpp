@@ -24,6 +24,7 @@ namespace ErrorCodes {
 		CannotGetRegistryKey,
 		CannotEnumerateRegistryKeys,
 		CannotCloseRegistryKey,
+		CannotDeleteRegistryKey,
 
 		// Shell error
 		CannotCallFromShell,
@@ -153,6 +154,8 @@ namespace ErrorCodes {
 				return "Cannot enumerate registry keys";
 			case CannotCloseRegistryKey:
 				return "Cannot close registry key";
+			case CannotDeleteRegistryKey:
+				return "Cannot delete registry key";
 			case CannotCallFromShell:
 				return "Cannot call the following from shell:";
 			case CannotEnumerateDisplaySettings:
