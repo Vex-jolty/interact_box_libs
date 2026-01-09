@@ -116,6 +116,9 @@ namespace ErrorCodes {
 
 		// Reboot error
 		CannotReboot,
+
+		// Others
+		IllegalDirectoryManipulation,
 	};
 
 	DllExport inline std::string getErrorMessage(ErrorCode code) {
@@ -262,6 +265,8 @@ namespace ErrorCodes {
 				return "Cannot adjust privileges";
 			case CannotReboot:
 				return "Cannot reboot";
+			case IllegalDirectoryManipulation:
+				return "Illegal directory manipulation";
 			default:
 				return "Seeing this error message should not be possible, please report this incident to the developer";
 		}
