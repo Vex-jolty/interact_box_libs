@@ -119,6 +119,7 @@ namespace ErrorCodes {
 
 		// Others
 		IllegalDirectoryManipulation,
+		CannotLockMutex,
 	};
 
 	DllExport inline std::string getErrorMessage(ErrorCode code) {
@@ -267,6 +268,8 @@ namespace ErrorCodes {
 				return "Cannot reboot";
 			case IllegalDirectoryManipulation:
 				return "Illegal directory manipulation";
+			case CannotLockMutex:
+				return "Cannot lock mutex";
 			default:
 				return "Seeing this error message should not be possible, please report this incident to the developer";
 		}
