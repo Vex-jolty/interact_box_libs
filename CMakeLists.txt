@@ -103,6 +103,23 @@ function(set_windows_version_definitions target version requires_additional_libs
 	endif()
 endfunction()
 
+# This function is for ensuring a cross-compiled library has a proper .dll or .lib extension, and no prefix
+# This is not meant to be used on native builds, and thus checks if the compiler is MinGW
+function(determine_lib_extension target make_static)
+	if(MINGW)
+		if(make_static)
+			set(LIB_SUFFIX ".lib")
+		else()
+			set(LIB_SUFFIX ".dll")
+		endif()
+
+		set_target_properties(${target} PROPERTIES
+			PREFIX ""
+			SUFFIX ${LIB_SUFFIX}
+		)
+	endif()
+endfunction()
+
 add_library(platform_config INTERFACE)
 
 target_include_directories(platform_config INTERFACE

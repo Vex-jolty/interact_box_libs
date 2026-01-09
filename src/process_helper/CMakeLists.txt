@@ -4,10 +4,7 @@ add_library(
   process_helper SHARED process_helper.cpp
 )
 
-set_target_properties(process_helper PROPERTIES
-  PREFIX ""
-  SUFFIX ".dll"
-)
+determine_lib_extension(process_helper FALSE)
 
 set_windows_version_definitions(process_helper ${TARGET_WINDOWS_VERSION} TRUE)
 

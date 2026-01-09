@@ -4,10 +4,7 @@ add_library(
   file_helper SHARED file_helper.cpp
 )
 
-set_target_properties(file_helper PROPERTIES
-  PREFIX ""
-  SUFFIX ".dll"
-)
+determine_lib_extension(file_helper FALSE)
 
 set_windows_version_definitions(file_helper ${TARGET_WINDOWS_VERSION} TRUE)
 
