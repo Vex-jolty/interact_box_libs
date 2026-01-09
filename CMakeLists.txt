@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.13)
 
 project(InteractBoxLibs VERSION 1.1.0)
 
@@ -26,19 +26,8 @@ if(NOT DEFINED TARGET_WINDOWS_VERSION)
 	)
 endif()
 
-function(set_windows_version_definitions target version requires_additional_libs)
+function(set_windows_version_definitions target version)
 	string(TOLOWER "${version}" version)
-
-	if (version IN_LIST VERSIONS_THAT_REQUIRE_PTHREAD9X)
-		target_link_libraries(${target} INTERFACE pthread-9x)
-		target_compile_options(${target} INTERFACE -m32 -march=i486)
-	else()
-		target_link_libraries(${target} INTERFACE winpthread)
-	endif()
-
-	if (version IN_LIST VERSIONS_THAT_REQUIRE_WRAPPERS)
-		target_link_libraries(${target} INTERFACE corkel32 corusr cornt)
-	endif()
 
 	if(version STREQUAL "win98")
 		set(WINVER_VAL			0x0400)
@@ -89,6 +78,22 @@ function(set_windows_version_definitions target version requires_additional_libs
 		_WIN32_WINNT=${_WIN32_WINNT_VAL}
 		_WIN32_WINDOWS=${_WIN32_WINDOWS_VAL}
 	)
+endfunction(set_windows_version_definitions)
+
+
+function(link_base_libs target version requires_additional_libs)
+	string(TOLOWER "${version}" version)
+
+	if (version IN_LIST VERSIONS_THAT_REQUIRE_PTHREAD9X)
+		target_link_libraries(${target} INTERFACE pthread-9x)
+		target_compile_options(${target} INTERFACE -m32 -march=i486)
+	else()
+		target_link_libraries(${target} INTERFACE winpthread)
+	endif()
+
+	if (version IN_LIST VERSIONS_THAT_REQUIRE_WRAPPERS)
+		target_link_libraries(${target} INTERFACE corkel32 corusr cornt)
+	endif()
 
 	if(requires_additional_libs)
 		set(ADDITIONAL_LIBS atomic kernel32 mingw32 gcc gcc_eh stdc++ shell32 advapi32 mingwex)
@@ -127,8 +132,7 @@ target_include_directories(platform_config INTERFACE
 	$<INSTALL_INTERFACE:include>
 )
 
-
-set_windows_version_definitions(platform_config ${TARGET_WINDOWS_VERSION} FALSE)
+set_windows_version_definitions(platform_config ${TARGET_WINDOWS_VERSION})
 
 target_compile_options(platform_config INTERFACE
 	-fcf-protection=none

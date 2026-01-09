@@ -9,6 +9,6 @@ target_include_directories(json_helper PRIVATE ${CMAKE_SOURCE_DIR}/include/error
   
 determine_lib_extension(json_helper FALSE)
 
-set_windows_version_definitions(json_helper ${TARGET_WINDOWS_VERSION} TRUE)
+link_base_libs(json_helper ${TARGET_WINDOWS_VERSION} TRUE)
   
 target_link_libraries(json_helper PRIVATE platform_config jsoncpp_static string_helper errors)

@@ -6,6 +6,6 @@ add_library(
 
 determine_lib_extension(file_helper FALSE)
 
-set_windows_version_definitions(file_helper ${TARGET_WINDOWS_VERSION} TRUE)
+link_base_libs(string_helper ${TARGET_WINDOWS_VERSION} TRUE)
 
 target_link_libraries(file_helper PRIVATE platform_config version string_helper)

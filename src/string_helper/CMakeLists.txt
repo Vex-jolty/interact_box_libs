@@ -5,7 +5,7 @@ add_library(
 )
 	
 determine_lib_extension(string_helper FALSE)
-	
-set_windows_version_definitions(string_helper ${TARGET_WINDOWS_VERSION} TRUE)
+
+link_base_libs(string_helper ${TARGET_WINDOWS_VERSION} TRUE)
 
 target_link_libraries(string_helper PRIVATE platform_config)
