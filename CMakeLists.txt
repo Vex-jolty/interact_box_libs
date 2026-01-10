@@ -78,6 +78,13 @@ function(set_windows_version_definitions target version)
 		_WIN32_WINNT=${_WIN32_WINNT_VAL}
 		_WIN32_WINDOWS=${_WIN32_WINDOWS_VAL}
 	)
+	# Adding Unicode support to win2k and later
+	if(${WINVER_VAL} GREATER 0x0400)
+		target_compile_definitions(${target} INTERFACE
+			UNICODE=ON
+			_UNICODE=ON
+		)
+	endif()
 endfunction(set_windows_version_definitions)
 
 

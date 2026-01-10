@@ -146,7 +146,7 @@ string FileHelper::readFileAsString(wstring filePath) {
 }
 
 wstring FileHelper::readFileAsWideString(wstring filePath) {
-	HANDLE hFile = CreateFile(
+	HANDLE hFile = CreateFileW(
 		filePath.c_str(),
 		GENERIC_READ,
 		FILE_SHARE_READ,
@@ -180,7 +180,7 @@ void FileHelper::writeToFile(wstring filePath, wstring content) {
 }
 
 HANDLE FileHelper::loadImageFile(wstring filePath) {
-	return LoadImage(
+	return LoadImageW(
 		NULL,
 		filePath.c_str(),
 		IMAGE_BITMAP,
@@ -214,11 +214,13 @@ wstring FileHelper::readFileAsWideString(string filePath) {
 	return StringHelper::stringToWideString(buffer);
 }
 
+#if WINVER >= _WIN32_WINNT_VISTA
 wstring FileHelper::getAppDataPath() {
 	wchar_t* path;
 	SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, NULL, &path);
 	return wstring(path);
 }
+#endif
 
 bool FileHelper::checkIfFileExists(wstring filePath) {
 	DWORD dwAttrib = GetFileAttributes(filePath.c_str());
@@ -227,7 +229,7 @@ bool FileHelper::checkIfFileExists(wstring filePath) {
 }
 
 bool FileHelper::renameFile(wstring oldPath, wstring newPath) {
-	return MoveFile(oldPath.c_str(), newPath.c_str());
+	return MoveFileW(oldPath.c_str(), newPath.c_str());
 }
 
 void FileHelper::writeToFile(HANDLE hFile, wstring content) {
@@ -264,7 +266,7 @@ vector<wstring> FileHelper::filterFiles(vector<wstring> files, wstring directory
 }
 
 bool FileHelper::deleteFile(wstring fileName) {
-	return DeleteFile(fileName.c_str());
+	return DeleteFileW(fileName.c_str());
 }
 
 bool FileHelper::copyFile(wstring oldPath, wstring newPath) {

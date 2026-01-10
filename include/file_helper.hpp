@@ -56,7 +56,9 @@ class DllExport FileHelper {
 		static std::wstring getWorkingDirectory();
 		static std::string getWorkingDirectoryAsString();
 
+		#if WINVER >= _WIN32_WINNT_VISTA
 		static std::wstring getAppDataPath();
+		#endif
 
 		static bool copyFile(std::wstring oldPath, std::wstring newPath);
 
