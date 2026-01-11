@@ -15,7 +15,7 @@
 #include "errors/interact_box_exceptions.hpp"
 
 
-class DllExport FileHelper {
+class FileHelper {
 	public:
 
 		#if WINVER > _WIN32_WINNT_NT4
@@ -41,6 +41,8 @@ class DllExport FileHelper {
 		static bool checkIfFileExists(std::wstring filePath);
 
 		static bool renameFile(std::wstring oldPath, std::wstring newPath);
+
+		static bool isInsideDirectory(std::wstring& file, std::wstring& directory);
 
 		static std::vector<std::wstring> filterFiles(std::vector<std::wstring> files, std::vector<std::wstring> extensions);
 		static std::vector<std::wstring> filterFiles(std::vector<std::wstring> files, std::wstring directory);

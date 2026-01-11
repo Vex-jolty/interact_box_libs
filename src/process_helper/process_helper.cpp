@@ -1,5 +1,4 @@
 #include "process_helper.hpp"
-#include <windows.h>
 
 using namespace std;
 
@@ -158,13 +157,18 @@ BOOL CALLBACK ProcessHelper::enumWindowsProc(HWND hwnd, LPARAM lParam) {
 }
 
 #if WINVER > _WIN32_WINNT_NT4
-BOOL CALLBACK ProcessHelper::enumWindowsWithVideo(HWND hwnd, LPARAM lParam) {
+BOOL CALLBACK ProcessHelper::enumDisplayWindows(HWND hwnd, LPARAM lParam) {
+	HWND* window = reinterpret_cast<HWND*>(lParam);
 	wchar_t windowTitle[256];
 	GetWindowText(hwnd, windowTitle, sizeof(windowTitle));
 	wstring title(windowTitle);
 
-	if (boost::icontains(title, L"video") || boost::icontains(title, L"vídeo")) {
-		*((HWND*)lParam) = hwnd;
+	int displayPropertiesId = 41; // ID for localized "Display" string according to resource hacker
+
+	wstring displayString = StringHelper::getWideStringFromLibrary(L"desk.cpl", displayPropertiesId);
+
+	if (boost::icontains(title, displayString)) {
+		*window = hwnd;
 		return FALSE;
 	}
 
@@ -178,9 +182,9 @@ HWND ProcessHelper::findMainWindow(wstring path) {
 	return (HWND)processId;
 }
 
-HWND ProcessHelper::findMainWindowWithVideo() {
+HWND ProcessHelper::findDisplaySettingsWindow() {
   HWND hwnd = NULL;
-	EnumWindows(enumWindowsWithVideo, (LPARAM)&hwnd);
+	EnumWindows(enumDisplayWindows, (LPARAM)&hwnd);
 	return hwnd;
 }
 

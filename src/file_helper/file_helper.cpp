@@ -232,6 +232,13 @@ bool FileHelper::renameFile(wstring oldPath, wstring newPath) {
 	return MoveFileW(oldPath.c_str(), newPath.c_str());
 }
 
+bool FileHelper::isInsideDirectory(wstring& file, wstring& directory) {
+  vector<wstring> splitFile = StringHelper::splitString(file, L"\\");
+	splitFile.pop_back();
+	wstring fileDirectory = boost::algorithm::join(splitFile, L"\\");
+	return boost::algorithm::iequals(fileDirectory, directory);
+}
+
 void FileHelper::writeToFile(HANDLE hFile, wstring content) {
 	DWORD bytesWritten;
 	bool writeOk = WriteFile(hFile, content.c_str(), content.size(), &bytesWritten, NULL);
@@ -539,21 +546,4 @@ bool FileHelper::deleteFile(string fileName) {
 
 bool FileHelper::copyFile(string oldPath, string newPath) {
 	return CopyFileA(oldPath.c_str(), newPath.c_str(), false);
-}
-
-BOOL WINAPI DllMain(
-	HINSTANCE dllInstanceHandle,
-	DWORD reason,
-	LPVOID reserved
-) {
-	switch (reason) {
-		case DLL_PROCESS_ATTACH:
-		case DLL_THREAD_ATTACH:
-		case DLL_PROCESS_DETACH:
-			break;
-
-		default:
-			return FALSE;
-	}
-	return TRUE;
 }

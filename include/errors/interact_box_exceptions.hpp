@@ -2,7 +2,7 @@
 #include "errors.hpp"
 #include "error_codes.hpp"
 
-class DllExport InteractBoxException : public std::exception {
+class InteractBoxException : public std::exception {
 public:
 	InteractBoxException(ErrorCodes::ErrorCode errCode, const std::string& msg) : message(msg), code(errCode) {}
 	InteractBoxException(ErrorCodes::ErrorCode errCode, const std::wstring& msg) : message(StringHelper::wideStringToString(msg)), code(errCode) {}

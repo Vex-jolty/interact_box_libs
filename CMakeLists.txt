@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 project(InteractBoxLibs VERSION 1.1.0)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_SYSTEM_NAME Windows)
 
@@ -17,7 +17,7 @@ set_property(CACHE TARGET_WINDOWS_VERSION PROPERTY STRINGS
 )
 
 set(VERSIONS_THAT_REQUIRE_PTHREAD9X win98 winme win2k winxp)
-set(VERSIONS_THAT_REQUIRE_MSVCRT40 win98 winme win2k)
+set(VERSIONS_THAT_REQUIRE_MSVCRT40 win98 winme win2k winxp)
 set(VERSIONS_THAT_REQUIRE_WRAPPERS win98 winme)
 
 if(NOT DEFINED TARGET_WINDOWS_VERSION)
@@ -103,7 +103,7 @@ function(link_base_libs target version requires_additional_libs)
 	endif()
 
 	if(requires_additional_libs)
-		set(ADDITIONAL_LIBS atomic kernel32 mingw32 gcc gcc_eh stdc++ shell32 advapi32 mingwex)
+		set(ADDITIONAL_LIBS atomic kernel32 mingw32 shell32 advapi32 mingwex)
 		if (NOT version IN_LIST VERSIONS_THAT_REQUIRE_MSVCRT40)
 			list(APPEND ADDITIONAL_LIBS uuid)
 		endif()
@@ -143,17 +143,13 @@ set_windows_version_definitions(platform_config ${TARGET_WINDOWS_VERSION})
 
 target_compile_options(platform_config INTERFACE
 	-fcf-protection=none
-)
-
-target_compile_options(platform_config INTERFACE
 	$<$<CONFIG:Release>:-ffunction-sections -fdata-sections -s>
+	$<$<CONFIG:Debug>:-g -gdwarf-4 -O0 -fno-omit-frame-pointer>
 )
 
 target_link_options(platform_config INTERFACE
 	$<$<CONFIG:Release>:-Wl,--gc-sections>
-)
-
-target_link_options(platform_config INTERFACE
+	$<$<CONFIG:Debug>:-g>
 	-Wl,--subsystem,windows
 	-static
 )

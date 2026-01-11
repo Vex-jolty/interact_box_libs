@@ -7,7 +7,7 @@
 #include "errors/interact_box_exceptions.hpp"
 #include "string_helper.hpp"
 
-class DllExport JsonHelper {
+class JsonHelper {
 public:
 	static std::string getJsonStringValue(Json::Value json, std::string key);
 	static std::string getJsonStringValue(Json::Value json, std::wstring key);

@@ -4,8 +4,9 @@
 #include <vector>
 #include <algorithm>
 #include "shared.hpp"
+#include <stdexcept>
 
-class DllExport StringHelper {
+class StringHelper {
 	public:
 		static std::string removePrefix(const std::string& str, const std::string& prefix);
 		static std::wstring removePrefix(const std::wstring& str, const std::wstring& prefix);
@@ -18,4 +19,7 @@ class DllExport StringHelper {
 		static std::vector<std::string> splitString(std::string input, std::string separator);
 		static std::vector<std::wstring> splitString(std::wstring input, std::wstring separator);
 		static std::string camelCaseToHuman(std::string input, bool capitalizeFirstLetter = false);
+		#if WINVER > _WIN32_WINNT_NT4
+		static std::wstring getWideStringFromLibrary(std::wstring libraryName, int stringId);
+		#endif
 };

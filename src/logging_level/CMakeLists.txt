@@ -7,4 +7,6 @@ add_library(
 
 determine_lib_extension(logging_level TRUE)
 
+link_base_libs(index_helper ${TARGET_WINDOWS_VERSION} TRUE)
+
 target_link_libraries(logging_level PRIVATE platform_config)

@@ -105,19 +105,13 @@ string StringHelper::camelCaseToHuman(string input, bool capitalizeFirstLetter) 
 	return output;
 }
 
-BOOL WINAPI DllMain(
-	HINSTANCE dllInstanceHandle,
-	DWORD reason,
-	LPVOID reserved
-) {
-	switch (reason) {
-		case DLL_PROCESS_ATTACH:
-		case DLL_THREAD_ATTACH:
-		case DLL_PROCESS_DETACH:
-			break;
-
-		default:
-			return FALSE;
-	}
-	return TRUE;
+#if WINVER > _WIN32_WINNT_NT4
+wstring StringHelper::getWideStringFromLibrary(wstring libraryName, int stringId) {
+  HMODULE libraryHandle = LoadLibrary(libraryName.c_str());
+	if (!libraryHandle) throw runtime_error("cannot load library " + wideStringToString(libraryName.c_str()));
+	wchar_t buffer[256];
+	int length = LoadString(libraryHandle, stringId, buffer, 256);
+	FreeLibrary(libraryHandle);
+	return wstring(buffer);
 }
+#endif
