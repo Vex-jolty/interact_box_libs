@@ -1,7 +1,7 @@
 project(FileHelper VERSION 1.0.0)
 
 add_library(
-  file_helper STATIC file_helper.cpp
+	file_helper STATIC file_helper.cpp
 )
 
 determine_lib_extension(file_helper TRUE)

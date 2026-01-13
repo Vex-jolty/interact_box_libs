@@ -2,7 +2,7 @@ project(LoggingLevel VERSION 1.0.0)
 
 # Logging is a static library to avoid conflicts during linking
 add_library(
-  logging_level STATIC logging_level.cpp
+	logging_level STATIC logging_level.cpp
 )
 
 determine_lib_extension(logging_level TRUE)

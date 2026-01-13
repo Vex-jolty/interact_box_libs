@@ -1,7 +1,7 @@
 project(IndexHelper VERSION 1.0.0)
 
 add_library(
-  index_helper STATIC index_helper.cpp
+	index_helper STATIC index_helper.cpp
 )
 
 determine_lib_extension(index_helper TRUE)

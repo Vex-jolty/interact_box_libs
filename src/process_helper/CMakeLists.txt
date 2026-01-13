@@ -1,7 +1,7 @@
 project(ProcessHelper VERSION 1.0.0)
 
 add_library(
-  process_helper STATIC process_helper.cpp
+	process_helper STATIC process_helper.cpp
 )
 
 determine_lib_extension(process_helper TRUE)
