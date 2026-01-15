@@ -120,6 +120,7 @@ namespace ErrorCodes {
 		// Others
 		IllegalDirectoryManipulation,
 		CannotLockMutex,
+		UnsupportedFeature,
 	};
 
 	DllExport inline std::string getErrorMessage(ErrorCode code) {
@@ -270,6 +271,8 @@ namespace ErrorCodes {
 				return "Illegal directory manipulation";
 			case CannotLockMutex:
 				return "Cannot lock mutex";
+			case UnsupportedFeature:
+				return "Unsupported feature";
 			default:
 				return "Seeing this error message should not be possible, please report this incident to the developer";
 		}
