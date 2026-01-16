@@ -16,7 +16,8 @@ std::string loggingLevelToString(LoggingLevel loggingLevel, bool isForLogFile) {
 			result = "error";
 			break;
 	}
-	if (!isForLogFile) return result;
+	if (!isForLogFile)
+		return result;
 	boost::to_upper(result);
 	return "[" + result + "]";
 }

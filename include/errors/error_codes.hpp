@@ -1,7 +1,6 @@
 #pragma once
 #include "errors.hpp"
 
-
 namespace ErrorCodes {
 	enum ErrorCode {
 		// File errors
@@ -172,7 +171,7 @@ namespace ErrorCodes {
 			case InvalidColorSetting:
 				return "Invalid color setting";
 			case DelCommand:
-			// cSpell:disable
+				// cSpell:disable
 				return "Del more like DELight yourself with deez nuts lmao gottem";
 			// cSpell:enable
 			case RemoveItemCommand:
@@ -274,8 +273,8 @@ namespace ErrorCodes {
 			case UnsupportedFeature:
 				return "Unsupported feature";
 			default:
-				return "Seeing this error message should not be possible, please report this incident to the developer";
+				return "Seeing this error message should not be possible, please report this incident to "
+							 "the developer";
 		}
 	}
-}
-
+} // namespace ErrorCodes

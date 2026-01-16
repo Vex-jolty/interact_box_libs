@@ -2,10 +2,10 @@
 
 using namespace std;
 #if WINVER > _WIN32_WINNT_NT4
-bool FileHelper::fileHasValidExtension(const wstring& fileName, vector<wstring> extensions) {
-	for (const auto& ext : extensions) {
+bool FileHelper::fileHasValidExtension(const wstring &fileName, vector<wstring> extensions) {
+	for (const auto &ext : extensions) {
 		if (fileName.size() < ext.size() ||
-			fileName.compare(fileName.size() - ext.size(), ext.size(), ext) != 0) {
+				fileName.compare(fileName.size() - ext.size(), ext.size(), ext) != 0) {
 			continue;
 		}
 		return true;
@@ -13,7 +13,7 @@ bool FileHelper::fileHasValidExtension(const wstring& fileName, vector<wstring> 
 	return false;
 }
 
-vector<wstring> FileHelper::listFiles(const wstring& directory) {
+vector<wstring> FileHelper::listFiles(const wstring &directory) {
 	vector<wstring> files;
 	WIN32_FIND_DATA findFileData;
 	HANDLE hFind = FindFirstFileW((directory + L"\\*").c_str(), &findFileData);
@@ -40,7 +40,7 @@ vector<wstring> FileHelper::listFiles(const wstring& directory) {
 	return files;
 }
 
-vector<wstring> FileHelper::listFilesWithoutFailures(const wstring& directory) {
+vector<wstring> FileHelper::listFilesWithoutFailures(const wstring &directory) {
 	vector<wstring> files;
 	WIN32_FIND_DATA findFileData;
 	HANDLE hFind = FindFirstFileW((directory + L"\\*").c_str(), &findFileData);
@@ -69,7 +69,8 @@ vector<wstring> FileHelper::listFilesWithoutFailures(const wstring& directory) {
 
 void FileHelper::removeFolder(wstring folder) {
 	bool success = RemoveDirectory(folder.c_str());
-	if (!success) throw InteractBoxException(ErrorCodes::CannotDeleteDirectory, folder);
+	if (!success)
+		throw InteractBoxException(ErrorCodes::CannotDeleteDirectory, folder);
 }
 
 wstring FileHelper::getExecutableFileName() {
@@ -100,13 +101,8 @@ string FileHelper::getWorkingDirectoryAsString() {
 
 HANDLE FileHelper::makeFile(wstring filePath, bool createNew) {
 	return CreateFile(
-		filePath.c_str(),
-		GENERIC_WRITE,
-		FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-		NULL,
-		createNew ? CREATE_NEW : OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL,
-		NULL
+		filePath.c_str(), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL,
+		createNew ? CREATE_NEW : OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL
 	);
 }
 
@@ -118,17 +114,13 @@ wstring FileHelper::getWindowsDirectory() {
 
 void FileHelper::createDirectory(wstring dirPath) {
 	bool success = CreateDirectoryW(dirPath.c_str(), NULL);
-	if (!success) throw InteractBoxException(ErrorCodes::CannotCreateDirectory, dirPath);
+	if (!success)
+		throw InteractBoxException(ErrorCodes::CannotCreateDirectory, dirPath);
 }
 
 string FileHelper::readFileAsString(wstring filePath) {
 	HANDLE hFile = CreateFile(
-		filePath.c_str(),
-		GENERIC_READ,
-		FILE_SHARE_READ,
-		NULL,
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL,
+		filePath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL,
 		NULL
 	);
 	if (hFile == INVALID_HANDLE_VALUE) {
@@ -139,7 +131,7 @@ string FileHelper::readFileAsString(wstring filePath) {
 	if (fileSize == INVALID_FILE_SIZE) {
 		throw InteractBoxException(ErrorCodes::InvalidFileSize, filePath);
 	}
-	wchar_t* buffer = new wchar_t[fileSize];
+	wchar_t *buffer = new wchar_t[fileSize];
 	ReadFile(hFile, buffer, fileSize, &bytesRead, NULL);
 	closeFile(hFile);
 	return StringHelper::wideStringToString(buffer);
@@ -147,12 +139,7 @@ string FileHelper::readFileAsString(wstring filePath) {
 
 wstring FileHelper::readFileAsWideString(wstring filePath) {
 	HANDLE hFile = CreateFileW(
-		filePath.c_str(),
-		GENERIC_READ,
-		FILE_SHARE_READ,
-		NULL,
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL,
+		filePath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL,
 		NULL
 	);
 	if (hFile == INVALID_HANDLE_VALUE) {
@@ -163,7 +150,7 @@ wstring FileHelper::readFileAsWideString(wstring filePath) {
 	if (fileSize == INVALID_FILE_SIZE) {
 		throw InteractBoxException(ErrorCodes::InvalidFileSize, filePath);
 	}
-	wchar_t* buffer = new wchar_t[fileSize];
+	wchar_t *buffer = new wchar_t[fileSize];
 	ReadFile(hFile, buffer, fileSize, &bytesRead, NULL);
 	closeFile(hFile);
 	return buffer;
@@ -180,24 +167,12 @@ void FileHelper::writeToFile(wstring filePath, wstring content) {
 }
 
 HANDLE FileHelper::loadImageFile(wstring filePath) {
-	return LoadImageW(
-		NULL,
-		filePath.c_str(),
-		IMAGE_BITMAP,
-		0,
-		0,
-		LR_LOADFROMFILE
-	);
+	return LoadImageW(NULL, filePath.c_str(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 }
 
 wstring FileHelper::readFileAsWideString(string filePath) {
 	HANDLE hFile = CreateFileA(
-		filePath.c_str(),
-		GENERIC_READ,
-		FILE_SHARE_READ,
-		NULL,
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL,
+		filePath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL,
 		NULL
 	);
 	if (hFile == INVALID_HANDLE_VALUE) {
@@ -208,32 +183,31 @@ wstring FileHelper::readFileAsWideString(string filePath) {
 	if (fileSize == INVALID_FILE_SIZE) {
 		throw InteractBoxException(ErrorCodes::InvalidFileSize, filePath);
 	}
-	char* buffer = new char[fileSize];
+	char *buffer = new char[fileSize];
 	ReadFile(hFile, buffer, fileSize, &bytesRead, NULL);
 	closeFile(hFile);
 	return StringHelper::stringToWideString(buffer);
 }
 
-#if WINVER >= _WIN32_WINNT_VISTA
+	#if WINVER >= _WIN32_WINNT_VISTA
 wstring FileHelper::getAppDataPath() {
-	wchar_t* path;
+	wchar_t *path;
 	SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, NULL, &path);
 	return wstring(path);
 }
-#endif
+	#endif
 
 bool FileHelper::checkIfFileExists(wstring filePath) {
 	DWORD dwAttrib = GetFileAttributes(filePath.c_str());
-	return (dwAttrib != INVALID_FILE_ATTRIBUTES &&
-		!(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+	return (dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
 }
 
 bool FileHelper::renameFile(wstring oldPath, wstring newPath) {
 	return MoveFileW(oldPath.c_str(), newPath.c_str());
 }
 
-bool FileHelper::isInsideDirectory(wstring& file, wstring& directory) {
-  vector<wstring> splitFile = StringHelper::splitString(file, L"\\");
+bool FileHelper::isInsideDirectory(wstring &file, wstring &directory) {
+	vector<wstring> splitFile = StringHelper::splitString(file, L"\\");
 	splitFile.pop_back();
 	wstring fileDirectory = boost::algorithm::join(splitFile, L"\\");
 	return boost::algorithm::iequals(fileDirectory, directory);
@@ -250,11 +224,12 @@ void FileHelper::writeToFile(HANDLE hFile, wstring content) {
 vector<wstring> FileHelper::filterFiles(vector<wstring> files, vector<wstring> extensions) {
 	vector<wstring> filteredFiles;
 	wstring executableFilename = StringHelper::toLowercase(getExecutableFileName());
-	auto extensionChecker = [&extensions, &executableFilename](const wstring& filename) {
+	auto extensionChecker = [&extensions, &executableFilename](const wstring &filename) {
 		wstring lowerCaseName = StringHelper::toLowercase(filename);
-		if (lowerCaseName == executableFilename) return false;
+		if (lowerCaseName == executableFilename)
+			return false;
 		return fileHasValidExtension(lowerCaseName, extensions);
-		};
+	};
 	copy_if(files.begin(), files.end(), back_inserter(filteredFiles), extensionChecker);
 	return filteredFiles;
 }
@@ -263,28 +238,28 @@ vector<wstring> FileHelper::filterFiles(vector<wstring> files, wstring directory
 	vector<wstring> filteredFiles;
 	wstring executableFilename = StringHelper::toLowercase(getExecutableFileName());
 	wstring lowerCaseDirectory = StringHelper::toLowercase(directory);
-	auto dirChecker = [&directory, &executableFilename, &lowerCaseDirectory](const wstring& filename) {
+	auto dirChecker = [&directory, &executableFilename,
+										 &lowerCaseDirectory](const wstring &filename) {
 		wstring lowerCaseName = StringHelper::toLowercase(filename);
-		if (lowerCaseName == executableFilename) return false;
+		if (lowerCaseName == executableFilename)
+			return false;
 		return lowerCaseName.starts_with(lowerCaseDirectory);
-		};
+	};
 	copy_if(files.begin(), files.end(), back_inserter(filteredFiles), dirChecker);
 	return filteredFiles;
 }
 
-bool FileHelper::deleteFile(wstring fileName) {
-	return DeleteFileW(fileName.c_str());
-}
+bool FileHelper::deleteFile(wstring fileName) { return DeleteFileW(fileName.c_str()); }
 
 bool FileHelper::copyFile(wstring oldPath, wstring newPath) {
 	return CopyFileW(oldPath.c_str(), newPath.c_str(), false);
 }
 
 #else
-bool FileHelper::fileHasValidExtension(const string& fileName, vector<string> extensions) {
-	for (const auto& ext : extensions) {
+bool FileHelper::fileHasValidExtension(const string &fileName, vector<string> extensions) {
+	for (const auto &ext : extensions) {
 		if (fileName.size() < ext.size() ||
-			fileName.compare(fileName.size() - ext.size(), ext.size(), ext) != 0) {
+				fileName.compare(fileName.size() - ext.size(), ext.size(), ext) != 0) {
 			continue;
 		}
 		return true;
@@ -292,7 +267,7 @@ bool FileHelper::fileHasValidExtension(const string& fileName, vector<string> ex
 	return false;
 }
 
-vector<string> FileHelper::listFiles(const string& directory) {
+vector<string> FileHelper::listFiles(const string &directory) {
 	vector<string> files;
 	WIN32_FIND_DATAA findFileData;
 	HANDLE hFind = FindFirstFileA((directory + "\\*").c_str(), &findFileData);
@@ -319,7 +294,7 @@ vector<string> FileHelper::listFiles(const string& directory) {
 	return files;
 }
 
-vector<string> FileHelper::listFilesWithoutFailures(const string& directory) {
+vector<string> FileHelper::listFilesWithoutFailures(const string &directory) {
 	vector<string> files;
 	WIN32_FIND_DATA findFileData;
 	HANDLE hFind = FindFirstFileA((directory + "\\*").c_str(), &findFileData);
@@ -346,8 +321,8 @@ vector<string> FileHelper::listFilesWithoutFailures(const string& directory) {
 	return files;
 }
 
-bool FileHelper::isInsideDirectory(string& file, string& directory) {
-  vector<string> splitFile = StringHelper::splitString(file, "\\");
+bool FileHelper::isInsideDirectory(string &file, string &directory) {
+	vector<string> splitFile = StringHelper::splitString(file, "\\");
 	splitFile.pop_back();
 	string fileDirectory = boost::algorithm::join(splitFile, "\\");
 	return boost::algorithm::iequals(fileDirectory, directory);
@@ -355,8 +330,7 @@ bool FileHelper::isInsideDirectory(string& file, string& directory) {
 
 bool FileHelper::checkIfFileExists(string filePath) {
 	DWORD dwAttrib = GetFileAttributesA(filePath.c_str());
-	return (dwAttrib != INVALID_FILE_ATTRIBUTES &&
-		!(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+	return (dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
 }
 
 bool FileHelper::renameFile(string oldPath, string newPath) {
@@ -365,7 +339,8 @@ bool FileHelper::renameFile(string oldPath, string newPath) {
 
 void FileHelper::removeFolder(string folder) {
 	bool success = RemoveDirectoryA(folder.c_str());
-	if (!success) throw InteractBoxException(ErrorCodes::CannotDeleteDirectory, folder);
+	if (!success)
+		throw InteractBoxException(ErrorCodes::CannotDeleteDirectory, folder);
 }
 
 string FileHelper::getExecutableFileName() {
@@ -375,22 +350,17 @@ string FileHelper::getExecutableFileName() {
 }
 
 string FileHelper::getVolumeSerial() {
-	char volumeName[MAX_PATH + 1] = { 0 };
-	char fileSystemName[MAX_PATH + 1] = { 0 };
+	char volumeName[MAX_PATH + 1] = {0};
+	char fileSystemName[MAX_PATH + 1] = {0};
 	DWORD serialNumber = 0;
 	DWORD maxComponentLen = 0;
 	DWORD fileSystemFlags = 0;
 	BOOL result = GetVolumeInformationA(
-		"C:\\",
-		volumeName,
-		ARRAYSIZE(volumeName),
-		&serialNumber,
-		&maxComponentLen,
-		&fileSystemFlags,
-		fileSystemName,
-		ARRAYSIZE(fileSystemName)
+		"C:\\", volumeName, ARRAYSIZE(volumeName), &serialNumber, &maxComponentLen, &fileSystemFlags,
+		fileSystemName, ARRAYSIZE(fileSystemName)
 	);
-	if (!result) return string();
+	if (!result)
+		return string();
 	char serialStr[20];
 	sprintf(serialStr, "%08X", serialNumber);
 	return string(serialStr);
@@ -412,11 +382,12 @@ string FileHelper::getWindowsDirectory() {
 vector<string> FileHelper::filterFiles(vector<string> files, vector<string> extensions) {
 	vector<string> filteredFiles;
 	string executableFilename = StringHelper::toLowercase(getExecutableFileName());
-	auto extensionChecker = [&extensions, &executableFilename](const std::string& filename) {
+	auto extensionChecker = [&extensions, &executableFilename](const std::string &filename) {
 		string lowerCaseName = StringHelper::toLowercase(filename);
-		if (lowerCaseName == executableFilename) return false;
+		if (lowerCaseName == executableFilename)
+			return false;
 		return fileHasValidExtension(lowerCaseName, extensions);
-		};
+	};
 	copy_if(files.begin(), files.end(), back_inserter(filteredFiles), extensionChecker);
 	return filteredFiles;
 }
@@ -425,11 +396,13 @@ vector<string> FileHelper::filterFiles(vector<string> files, string directory) {
 	vector<string> filteredFiles;
 	string executableFilename = StringHelper::toLowercase(getExecutableFileName());
 	string lowerCaseDirectory = StringHelper::toLowercase(directory);
-	auto dirChecker = [&directory, &executableFilename, &lowerCaseDirectory](const std::string& filename) {
+	auto dirChecker = [&directory, &executableFilename,
+										 &lowerCaseDirectory](const std::string &filename) {
 		string lowerCaseName = StringHelper::toLowercase(filename);
-		if (lowerCaseName == executableFilename) return false;
+		if (lowerCaseName == executableFilename)
+			return false;
 		return lowerCaseName.starts_with(lowerCaseDirectory);
-		};
+	};
 	copy_if(files.begin(), files.end(), back_inserter(filteredFiles), dirChecker);
 	return filteredFiles;
 }
@@ -438,13 +411,8 @@ vector<string> FileHelper::filterFiles(vector<string> files, string directory) {
 
 HANDLE FileHelper::makeFile(string filePath, bool createNew) {
 	return CreateFileA(
-		filePath.c_str(),
-		GENERIC_WRITE,
-		FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-		NULL,
-		createNew ? CREATE_NEW : OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL,
-		NULL
+		filePath.c_str(), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL,
+		createNew ? CREATE_NEW : OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL
 	);
 }
 
@@ -455,15 +423,12 @@ string FileHelper::getFileVersion(string filePath) {
 	DWORD versionSize = GetFileVersionInfoSizeA(filePath.c_str(), &versionHandle);
 	LPSTR versionData = new char[versionSize];
 	GetFileVersionInfoA(filePath.c_str(), versionHandle, versionSize, versionData);
-	VerQueryValueA(versionData, "\\", (VOID FAR * FAR*) & lpBuffer, &size);
-	VS_FIXEDFILEINFO* verInfo = (VS_FIXEDFILEINFO*)lpBuffer;
-	char* versionString;
+	VerQueryValueA(versionData, "\\", (VOID FAR * FAR *)&lpBuffer, &size);
+	VS_FIXEDFILEINFO *verInfo = (VS_FIXEDFILEINFO *)lpBuffer;
+	char *versionString;
 	sprintf(
-		versionString,
-		"%d.%d.%d.%d",
-		(verInfo->dwFileVersionMS >> 16) & 0xffff,
-		(verInfo->dwFileVersionMS >> 0) & 0xffff,
-		(verInfo->dwFileVersionLS >> 16) & 0xffff,
+		versionString, "%d.%d.%d.%d", (verInfo->dwFileVersionMS >> 16) & 0xffff,
+		(verInfo->dwFileVersionMS >> 0) & 0xffff, (verInfo->dwFileVersionLS >> 16) & 0xffff,
 		(verInfo->dwFileVersionLS >> 0) & 0xffff
 	);
 	delete[] versionData;
@@ -472,17 +437,13 @@ string FileHelper::getFileVersion(string filePath) {
 
 void FileHelper::createDirectory(string dirPath) {
 	bool success = CreateDirectoryA(dirPath.c_str(), NULL);
-	if (!success) throw InteractBoxException(ErrorCodes::CannotCreateDirectory, dirPath);
+	if (!success)
+		throw InteractBoxException(ErrorCodes::CannotCreateDirectory, dirPath);
 }
 
 string FileHelper::readFileAsString(string filePath) {
 	HANDLE hFile = CreateFileA(
-		filePath.c_str(),
-		GENERIC_READ,
-		FILE_SHARE_READ,
-		NULL,
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL,
+		filePath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL,
 		NULL
 	);
 	if (hFile == INVALID_HANDLE_VALUE) {
@@ -493,21 +454,14 @@ string FileHelper::readFileAsString(string filePath) {
 	if (fileSize == INVALID_FILE_SIZE) {
 		throw InteractBoxException(ErrorCodes::InvalidFileSize, filePath);
 	}
-	char* buffer = new char[fileSize];
+	char *buffer = new char[fileSize];
 	ReadFile(hFile, buffer, fileSize, &bytesRead, NULL);
 	closeFile(hFile);
 	return buffer;
 }
 
 HANDLE FileHelper::loadImageFile(string filePath) {
-	return LoadImageA(
-		NULL,
-		filePath.c_str(),
-		IMAGE_BITMAP,
-		0,
-		0,
-		LR_LOADFROMFILE
-	);
+	return LoadImageA(NULL, filePath.c_str(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 }
 
 void FileHelper::closeFile(HANDLE hFile) {
@@ -540,9 +494,7 @@ long FileHelper::getFileSize(HANDLE hFile) {
 	return size;
 }
 
-bool FileHelper::deleteFile(string fileName) {
-	return DeleteFileA(fileName.c_str());
-}
+bool FileHelper::deleteFile(string fileName) { return DeleteFileA(fileName.c_str()); }
 
 bool FileHelper::copyFile(string oldPath, string newPath) {
 	return CopyFileA(oldPath.c_str(), newPath.c_str(), false);
