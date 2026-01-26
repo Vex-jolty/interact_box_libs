@@ -10,5 +10,11 @@ target_include_directories(json_helper PRIVATE ${CMAKE_SOURCE_DIR}/include/error
 determine_lib_extension(json_helper TRUE)
 
 link_base_libs(json_helper ${TARGET_WINDOWS_VERSION} TRUE)
+
+if (WIN32 AND MINGW)
+	set(JSONCPP_NAME jsoncpp_static)
+else()
+	set(JSONCPP_NAME jsoncpp)
+endif()
 	
-target_link_libraries(json_helper PRIVATE platform_config jsoncpp_static string_helper errors)
+target_link_libraries(json_helper PRIVATE platform_config ${JSONCPP_NAME} string_helper errors)

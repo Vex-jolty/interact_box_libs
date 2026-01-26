@@ -10,9 +10,11 @@
 class JsonHelper {
 	public:
 		static std::string getJsonStringValue(Json::Value json, std::string key);
+#ifdef WIN32
 		static std::string getJsonStringValue(Json::Value json, std::wstring key);
 		static std::wstring getJsonWideStringValue(Json::Value json, std::string key);
 		static std::wstring getJsonWideStringValue(Json::Value json, std::wstring key);
+#endif
 		static int getJsonIntValue(Json::Value json, std::string key);
 		static bool getJsonBoolValue(Json::Value json, std::string key);
 		static std::vector<std::string> getJsonStringArray(Json::Value json, std::string key);
@@ -25,7 +27,7 @@ class JsonHelper {
 			std::vector<T> result;
 			result.reserve(size);
 			std::transform(
-				valueJson.begin(), valueJson.end(), std::back_inserter(result), [](const auto &e) {
+				valueJson.begin(), valueJson.end(), std::back_inserter(result), [](const auto& e) {
 					std::string stringVal = e.asString();
 					return static_cast<T>(stringVal);
 				}
@@ -39,7 +41,7 @@ class JsonHelper {
 			int size = json.size();
 			std::vector<T> result;
 			result.reserve(size);
-			std::transform(json.begin(), json.end(), std::back_inserter(result), [](const auto &e) {
+			std::transform(json.begin(), json.end(), std::back_inserter(result), [](const auto& e) {
 				std::string stringVal = e.asString();
 				return static_cast<T>(stringVal);
 			});

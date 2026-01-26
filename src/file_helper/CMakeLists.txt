@@ -8,4 +8,9 @@ determine_lib_extension(file_helper TRUE)
 
 link_base_libs(string_helper ${TARGET_WINDOWS_VERSION} TRUE)
 
-target_link_libraries(file_helper PRIVATE platform_config version string_helper)
+set(LIBS_TO_LINK platform_config)
+if (WIN32)
+	list(APPEND LIBS_TO_LINK version)
+endif()
+list(APPEND LIBS_TO_LINK string_helper)
+target_link_libraries(file_helper PRIVATE ${LIBS_TO_LINK})

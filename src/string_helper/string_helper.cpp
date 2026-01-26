@@ -1,14 +1,14 @@
 #include "string_helper.hpp"
 
 using namespace std;
-string StringHelper::removePrefix(const string &str, const string &prefix) {
+string StringHelper::removePrefix(const string& str, const string& prefix) {
 	if (str.size() >= prefix.size() && str.compare(0, prefix.size(), prefix) == 0) {
 		return str.substr(prefix.size());
 	}
 	return str;
 }
 
-string StringHelper::removeSuffix(const string &str, const string &suffix) {
+string StringHelper::removeSuffix(const string& str, const string& suffix) {
 	if (str.size() >= suffix.size() &&
 			str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0) {
 		return str.substr(0, str.size() - suffix.size());
@@ -16,14 +16,14 @@ string StringHelper::removeSuffix(const string &str, const string &suffix) {
 	return str;
 }
 
-wstring StringHelper::removePrefix(const wstring &str, const wstring &prefix) {
+wstring StringHelper::removePrefix(const wstring& str, const wstring& prefix) {
 	if (str.size() >= prefix.size() && str.compare(0, prefix.size(), prefix) == 0) {
 		return str.substr(prefix.size());
 	}
 	return str;
 }
 
-wstring StringHelper::removeSuffix(const wstring &str, const wstring &suffix) {
+wstring StringHelper::removeSuffix(const wstring& str, const wstring& suffix) {
 	if (str.size() >= suffix.size() &&
 			str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0) {
 		return str.substr(0, str.size() - suffix.size());
@@ -47,6 +47,7 @@ wstring StringHelper::toLowercase(wstring input) {
 	return lowerStr;
 }
 
+#ifdef WIN32
 wstring StringHelper::stringToWideString(string input) {
 	int sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, input.c_str(), (int)input.size(), NULL, 0);
 	wstring wstr(sizeNeeded, 0);
@@ -61,6 +62,7 @@ string StringHelper::wideStringToString(wstring input) {
 	WideCharToMultiByte(CP_UTF8, 0, &input[0], (int)input.size(), &str[0], sizeNeeded, NULL, NULL);
 	return str;
 }
+#endif
 
 vector<string> StringHelper::splitString(string input, string separator) {
 	vector<string> result;
@@ -106,7 +108,7 @@ string StringHelper::camelCaseToHuman(string input, bool capitalizeFirstLetter) 
 	return output;
 }
 
-#if WINVER > _WIN32_WINNT_NT4
+#if defined(WIN32) && WINVER > _WIN32_WINNT_NT4
 wstring StringHelper::getWideStringFromLibrary(wstring libraryName, int stringId) {
 	HMODULE libraryHandle = LoadLibrary(libraryName.c_str());
 	if (!libraryHandle)

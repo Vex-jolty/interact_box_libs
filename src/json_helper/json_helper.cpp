@@ -8,6 +8,7 @@ string JsonHelper::getJsonStringValue(Json::Value json, string key) {
 	return valueJson.asString();
 }
 
+#ifdef WIN32
 string JsonHelper::getJsonStringValue(Json::Value json, wstring key) {
 	const Json::Value valueJson = json.get(StringHelper::wideStringToString(key).c_str(), false);
 	if (!valueJson.isString())
@@ -28,6 +29,7 @@ wstring JsonHelper::getJsonWideStringValue(Json::Value json, string key) {
 		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
 	return StringHelper::stringToWideString(valueJson.asString());
 }
+#endif
 
 int JsonHelper::getJsonIntValue(Json::Value json, string key) {
 	const Json::Value valueJson = json.get(key, "");
@@ -50,7 +52,7 @@ vector<string> JsonHelper::getJsonStringArray(Json::Value json, string key) {
 	int size = valueJson.size();
 	vector<string> result;
 	result.reserve(size);
-	std::transform(valueJson.begin(), valueJson.end(), std::back_inserter(result), [](const auto &e) {
+	std::transform(valueJson.begin(), valueJson.end(), std::back_inserter(result), [](const auto& e) {
 		return e.asString();
 	});
 	return result;
@@ -64,7 +66,7 @@ Json::Value JsonHelper::createJsonBody(string key, string value) {
 
 Json::Value JsonHelper::createJsonBody(map<string, string> pairs) {
 	Json::Value jsonBody;
-	for (const auto &pair : pairs) {
+	for (const auto& pair : pairs) {
 		jsonBody[pair.first] = pair.second;
 	}
 	return jsonBody;
@@ -72,7 +74,7 @@ Json::Value JsonHelper::createJsonBody(map<string, string> pairs) {
 
 Json::Value JsonHelper::createJsonBody(map<string, int> pairs) {
 	Json::Value jsonBody;
-	for (const auto &pair : pairs) {
+	for (const auto& pair : pairs) {
 		jsonBody[pair.first] = pair.second;
 	}
 	return jsonBody;

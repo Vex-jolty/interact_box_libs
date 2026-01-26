@@ -122,7 +122,7 @@ namespace ErrorCodes {
 		UnsupportedFeature,
 	};
 
-	DllExport inline std::string getErrorMessage(ErrorCode code) {
+	inline std::string getErrorMessage(ErrorCode code) {
 		switch (code) {
 			case CannotOpenFile:
 				return "Cannot open file";

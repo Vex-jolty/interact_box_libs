@@ -4,12 +4,16 @@ project(InteractBoxLibs VERSION 1.1.0)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_SYSTEM_NAME Windows)
 
-if (NOT MINGW)
-	message(FATAL_ERROR "${CMAKE_CXX_COMPILER_ID} is not a currently supported compiler")
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	if (NOT MINGW)
+		message(FATAL_ERROR "${CMAKE_CXX_COMPILER_ID} is not a currently supported compiler")
+	endif()
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+else()
+	message(FATAL_ERROR "${CMAKE_SYSTEM_NAME} is not a currently supported operating system")
 endif()
-
 set(TARGET_WINDOWS_VERSION "win98" CACHE STRING "The version of Windows to target (win98, winme, win2k, winxp, vista, win7, win8, win10, win11)")
 
 set_property(CACHE TARGET_WINDOWS_VERSION PROPERTY STRINGS
@@ -89,36 +93,38 @@ endfunction(set_windows_version_definitions)
 
 
 function(link_base_libs target version requires_additional_libs)
-	string(TOLOWER "${version}" version)
+	if (WIN32)
+		string(TOLOWER "${version}" version)
 
-	if (version IN_LIST VERSIONS_THAT_REQUIRE_PTHREAD9X)
-		target_link_libraries(${target} INTERFACE pthread-9x)
-		target_compile_options(${target} INTERFACE -m32 -march=i486)
-	else()
-		target_link_libraries(${target} INTERFACE winpthread)
-	endif()
-
-	if (version IN_LIST VERSIONS_THAT_REQUIRE_WRAPPERS)
-		target_link_libraries(${target} INTERFACE corkel32 corusr cornt)
-	endif()
-
-	if(requires_additional_libs)
-		set(ADDITIONAL_LIBS atomic kernel32 mingw32 shell32 advapi32 mingwex)
-		if (NOT version IN_LIST VERSIONS_THAT_REQUIRE_MSVCRT40)
-			list(APPEND ADDITIONAL_LIBS uuid)
+		if (version IN_LIST VERSIONS_THAT_REQUIRE_PTHREAD9X)
+			target_link_libraries(${target} INTERFACE pthread-9x)
+			target_compile_options(${target} INTERFACE -m32 -march=i486)
+		else()
+			target_link_libraries(${target} INTERFACE winpthread)
 		endif()
-		target_link_libraries(${target} INTERFACE ${ADDITIONAL_LIBS})
-	endif()
 
-	if (version IN_LIST VERSIONS_THAT_REQUIRE_MSVCRT40)
-		target_link_libraries(${target} INTERFACE msvcrt40)
+		if (version IN_LIST VERSIONS_THAT_REQUIRE_WRAPPERS)
+			target_link_libraries(${target} INTERFACE corkel32 corusr cornt)
+		endif()
+
+		if(requires_additional_libs)
+			set(ADDITIONAL_LIBS atomic kernel32 mingw32 shell32 advapi32 mingwex)
+			if (NOT version IN_LIST VERSIONS_THAT_REQUIRE_MSVCRT40)
+				list(APPEND ADDITIONAL_LIBS uuid)
+			endif()
+			target_link_libraries(${target} INTERFACE ${ADDITIONAL_LIBS})
+		endif()
+
+		if (version IN_LIST VERSIONS_THAT_REQUIRE_MSVCRT40)
+			target_link_libraries(${target} INTERFACE msvcrt40)
+		endif()
 	endif()
 endfunction()
 
 # This function is for ensuring a cross-compiled library has a proper .dll or .lib extension, and no prefix
 # This is not meant to be used on native builds, and thus checks if the compiler is MinGW
 function(determine_lib_extension target make_static)
-	if(MINGW)
+	if(WIN32 AND MINGW)
 		if(make_static)
 			set(LIB_SUFFIX ".lib")
 		else()
@@ -150,7 +156,7 @@ target_compile_options(platform_config INTERFACE
 target_link_options(platform_config INTERFACE
 	$<$<CONFIG:Release>:-Wl,--gc-sections>
 	$<$<CONFIG:Debug>:-g>
-	-Wl,--subsystem,windows
+	$<$<PLATFORM_ID:Windows>:-Wl,--subsystem,windows>
 	-static
 )
 

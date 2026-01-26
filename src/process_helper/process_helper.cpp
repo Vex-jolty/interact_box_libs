@@ -2,7 +2,8 @@
 
 using namespace std;
 
-#if WINVER > _WIN32_WINNT_NT4
+#ifdef WIN32
+	#if WINVER > _WIN32_WINNT_NT4
 DWORD ProcessHelper::getProcessId(wstring path) {
 	DWORD processId = 0;
 	PROCESSENTRY32W entry;
@@ -20,7 +21,7 @@ DWORD ProcessHelper::getProcessId(wstring path) {
 	CloseHandle(snapshot);
 	return processId;
 }
-#endif
+	#endif
 
 DWORD ProcessHelper::getProcessId(string path) {
 	DWORD processId = 0;
@@ -30,24 +31,24 @@ DWORD ProcessHelper::getProcessId(string path) {
 
 	if (Process32First(snapshot, &entry)) {
 		do {
-#if WINVER > _WIN32_WINNT_NT4
+	#if WINVER > _WIN32_WINNT_NT4
 			if (_tcsicmp(entry.szExeFile, StringHelper::stringToWideString(path).c_str()) == 0) {
 				processId = entry.th32ProcessID;
 				break;
 			}
-#else
+	#else
 			if (_tcsicmp(entry.szExeFile, (path.c_str())) == 0) {
 				processId = entry.th32ProcessID;
 				break;
 			}
-#endif
+	#endif
 		} while (Process32Next(snapshot, &entry));
 	}
 	CloseHandle(snapshot);
 	return processId;
 }
 
-#if WINVER > _WIN32_WINNT_NT4
+	#if WINVER > _WIN32_WINNT_NT4
 ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> paths) {
 	ProcessPathAndPID processPathAndPID = {L"", 0};
 	PROCESSENTRY32 entry;
@@ -56,7 +57,7 @@ ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> paths) {
 
 	if (Process32First(snapshot, &entry)) {
 		do {
-			for (auto &path : paths) {
+			for (auto& path : paths) {
 				wstring widePath = StringHelper::stringToWideString(path);
 				if (_tcsicmp(entry.szExeFile, StringHelper::stringToWideString(path).c_str()) == 0) {
 					processPathAndPID.pid = entry.th32ProcessID;
@@ -79,12 +80,12 @@ ANSIProcessPathAndPID ProcessHelper::getFirstProcessOfManyANSI(vector<string> pa
 
 	if (Process32First(snapshot, &entry)) {
 		do {
-			for (auto &path : paths) {
-	#if WINVER > _WIN32_WINNT_NT4
+			for (auto& path : paths) {
+		#if WINVER > _WIN32_WINNT_NT4
 				if (_tcsicmp(entry.szExeFile, StringHelper::stringToWideString(path).c_str()) == 0) {
-	#else
+		#else
 				if (_tcsicmp(entry.szExeFile, path.c_str()) == 0) {
-	#endif
+		#endif
 					processPathAndPID.pid = entry.th32ProcessID;
 					processPathAndPID.path = path;
 					CloseHandle(snapshot);
@@ -96,7 +97,7 @@ ANSIProcessPathAndPID ProcessHelper::getFirstProcessOfManyANSI(vector<string> pa
 	CloseHandle(snapshot);
 	return processPathAndPID;
 }
-#else
+	#else
 ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> paths) {
 	ProcessPathAndPID processPathAndPID = {"", 0};
 	PROCESSENTRY32 entry;
@@ -105,7 +106,7 @@ ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> paths) {
 
 	if (Process32First(snapshot, &entry)) {
 		do {
-			for (auto &path : paths) {
+			for (auto& path : paths) {
 				if (_tcsicmp(entry.szExeFile, path.c_str()) == 0) {
 					processPathAndPID.pid = entry.th32ProcessID;
 					processPathAndPID.path = path;
@@ -118,9 +119,9 @@ ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> paths) {
 	CloseHandle(snapshot);
 	return processPathAndPID;
 }
-#endif
+	#endif
 
-#if WINVER > _WIN32_WINNT_NT4
+	#if WINVER > _WIN32_WINNT_NT4
 ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<wstring> paths) {
 	ProcessPathAndPID processPathAndPID = {L"", 0};
 	PROCESSENTRY32 entry;
@@ -129,7 +130,7 @@ ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<wstring> paths) {
 
 	if (Process32First(snapshot, &entry)) {
 		do {
-			for (auto &path : paths) {
+			for (auto& path : paths) {
 				if (_tcsicmp(entry.szExeFile, path.c_str()) == 0) {
 					processPathAndPID.pid = entry.th32ProcessID;
 					processPathAndPID.path = path;
@@ -142,23 +143,23 @@ ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<wstring> paths) {
 	CloseHandle(snapshot);
 	return processPathAndPID;
 }
-#endif
+	#endif
 
 BOOL CALLBACK ProcessHelper::enumWindowsProc(HWND hwnd, LPARAM lParam) {
 	DWORD processId;
 	GetWindowThreadProcessId(hwnd, &processId);
 
-	if (processId == *((DWORD *)lParam)) {
-		*((HWND *)lParam) = hwnd;
+	if (processId == *((DWORD*)lParam)) {
+		*((HWND*)lParam) = hwnd;
 		return FALSE;
 	}
 
 	return TRUE;
 }
 
-#if WINVER > _WIN32_WINNT_NT4
+	#if WINVER > _WIN32_WINNT_NT4
 BOOL CALLBACK ProcessHelper::enumDisplayWindows(HWND hwnd, LPARAM lParam) {
-	HWND *window = reinterpret_cast<HWND *>(lParam);
+	HWND* window = reinterpret_cast<HWND*>(lParam);
 	wchar_t windowTitle[256];
 	GetWindowText(hwnd, windowTitle, sizeof(windowTitle));
 	wstring title(windowTitle);
@@ -208,7 +209,7 @@ void ProcessHelper::killProcess(wstring path, int exitCode) {
 	if (!success)
 		throw InteractBoxException(ErrorCodes::CannotCloseHandle, path);
 }
-#endif
+	#endif
 
 HWND ProcessHelper::findMainWindow(DWORD processId) {
 	HWND hwnd = NULL;
@@ -261,3 +262,50 @@ void ProcessHelper::killProcess(DWORD pid, int exitCode) {
 	if (!success)
 		throw InteractBoxException(ErrorCodes::CannotCloseHandle);
 }
+
+#else
+namespace fs = std::filesystem;
+
+pid_t ProcessHelper::getProcessId(const string& name) {
+	for (const auto& entry : fs::directory_iterator("/proc")) {
+		if (!entry.is_directory())
+			continue;
+
+		const string pidStr = entry.path().filename().string();
+		if (!all_of(pidStr.begin(), pidStr.end(), ::isdigit))
+			continue;
+
+		ifstream commFile(entry.path() / "comm");
+		if (!commFile)
+			continue;
+
+		string comm;
+		getline(commFile, comm);
+
+		if (comm == name) {
+			return static_cast<pid_t>(std::stoi(pidStr));
+		}
+	}
+	return -1;
+}
+
+ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> names) {
+	ProcessPathAndPID pathAndId{"", -1};
+	for (const auto& name : names) {
+		pid_t pid = getProcessId(name);
+		if (pid == -1)
+			continue;
+		pathAndId.path = name;
+		pathAndId.pid = pid;
+	}
+	return pathAndId;
+}
+
+void ProcessHelper::killProcess(pid_t pid) { kill(pid, SIGKILL); }
+
+void ProcessHelper::killProcess(const string& name) {
+	pid_t pid = getProcessId(name);
+	killProcess(pid);
+}
+
+#endif
