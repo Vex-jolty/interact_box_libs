@@ -167,6 +167,17 @@ void FileHelper::writeToFile(wstring filePath, wstring content) {
 	closeFile(hFile);
 }
 
+void FileHelper::writeToFile(wstring filePath, string content) {
+	HANDLE hFile = makeFile(filePath, false);
+	DWORD bytesWritten;
+	bool writeOk = WriteFile(hFile, content.c_str(), content.size(), &bytesWritten, NULL);
+	if (!writeOk) {
+		throw InteractBoxException(ErrorCodes::CannotWriteToFile, filePath);
+	}
+	closeFile(hFile);
+}
+
+
 HANDLE FileHelper::loadImageFile(wstring filePath) {
 	return LoadImageW(NULL, filePath.c_str(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 }

@@ -42,6 +42,7 @@ class FileHelper {
 		static HANDLE loadImageFile(std::wstring filePath);
 
 		static void writeToFile(std::wstring filePath, std::wstring content);
+		static void writeToFile(std::wstring filePath, std::string content);
 		static void writeToFile(HANDLE hFile, std::wstring content);
 
 		static std::wstring getWindowsDirectory();

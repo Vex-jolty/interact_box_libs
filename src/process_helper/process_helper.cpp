@@ -4,7 +4,7 @@ using namespace std;
 
 #ifdef WIN32
 	#if WINVER > _WIN32_WINNT_NT4
-DWORD ProcessHelper::getProcessId(wstring path) {
+DWORD ProcessHelper::getProcessId(const wstring& path) {
 	DWORD processId = 0;
 	PROCESSENTRY32W entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
@@ -23,7 +23,7 @@ DWORD ProcessHelper::getProcessId(wstring path) {
 }
 	#endif
 
-DWORD ProcessHelper::getProcessId(string path) {
+DWORD ProcessHelper::getProcessId(const string& path) {
 	DWORD processId = 0;
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
@@ -176,7 +176,7 @@ BOOL CALLBACK ProcessHelper::enumDisplayWindows(HWND hwnd, LPARAM lParam) {
 	return TRUE;
 }
 
-HWND ProcessHelper::findMainWindow(wstring path) {
+HWND ProcessHelper::findMainWindow(const wstring& path) {
 	HWND hwnd = NULL;
 	DWORD processId = getProcessId(path);
 	EnumWindows(enumWindowsProc, (LPARAM)&processId);
@@ -189,13 +189,13 @@ HWND ProcessHelper::findDisplaySettingsWindow() {
 	return hwnd;
 }
 
-void ProcessHelper::setToForeground(wstring file) {
+void ProcessHelper::setToForeground(const wstring& file) {
 	DWORD processId = getProcessId(file);
 	HWND window = findMainWindow(processId);
 	setToForeground(window);
 }
 
-void ProcessHelper::killProcess(wstring path, int exitCode) {
+void ProcessHelper::killProcess(const wstring& path, int exitCode) {
 	DWORD pid = getProcessId(path);
 	if (pid == 0)
 		return;
@@ -217,7 +217,7 @@ HWND ProcessHelper::findMainWindow(DWORD processId) {
 	return (HWND)processId;
 }
 
-HWND ProcessHelper::findMainWindow(string path) {
+HWND ProcessHelper::findMainWindow(const string& path) {
 	HWND hwnd = NULL;
 	DWORD processId = getProcessId(path);
 	EnumWindows(enumWindowsProc, (LPARAM)&processId);
@@ -228,13 +228,13 @@ void ProcessHelper::setToForeground(HWND hwnd) {
 	SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 }
 
-void ProcessHelper::setToForeground(string file) {
+void ProcessHelper::setToForeground(const string& file) {
 	DWORD processId = getProcessId(file);
 	HWND window = findMainWindow(processId);
 	setToForeground(window);
 }
 
-void ProcessHelper::killProcess(string path, int exitCode) {
+void ProcessHelper::killProcess(const string& path, int exitCode) {
 	DWORD pid = getProcessId(path);
 	if (pid == 0)
 		return;
