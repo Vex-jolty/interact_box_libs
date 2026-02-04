@@ -301,6 +301,11 @@ ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> names) {
 	return pathAndId;
 }
 
+void ProcessHelper::setToForeground(const string& path) {
+	// Impossible to implement on Linux
+	return;
+}
+
 void ProcessHelper::killProcess(pid_t pid) { kill(pid, SIGKILL); }
 
 void ProcessHelper::killProcess(const string& name) {

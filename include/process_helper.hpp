@@ -65,6 +65,7 @@ class ProcessHelper {
 #else
 		static pid_t getProcessId(const std::string& name);
 		static ProcessPathAndPID getFirstProcessOfMany(std::vector<std::string> names);
+		static void setToForeground(const std::string& path);
 		static void killProcess(const std::string& name);
 		static void killProcess(pid_t pid);
 #endif

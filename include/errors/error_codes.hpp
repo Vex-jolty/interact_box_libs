@@ -69,6 +69,7 @@ namespace ErrorCodes {
 		SocketCreationFailed,
 		CannotBindToSocket,
 		CannotListenToSocket,
+		CannotSendResponse,
 
 		// Json errors
 		JSONNotAString,
@@ -216,6 +217,8 @@ namespace ErrorCodes {
 				return "Cannot bind to socket";
 			case CannotListenToSocket:
 				return "Cannot listen to socket";
+			case CannotSendResponse:
+				return "Cannot send response";
 			case JSONNotAString:
 				return "Not a JSON string";
 			case JSONNotANumber:
