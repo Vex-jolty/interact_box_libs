@@ -141,8 +141,6 @@ class FileHelper {
 
 		static void removeFolder(std::string folder);
 
-		static std::string getWindowsDirectory();
-
 		static bool checkIfFileExists(std::string filePath);
 
 		static bool renameFile(std::string oldPath, std::string newPath);
