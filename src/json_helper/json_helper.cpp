@@ -1,30 +1,51 @@
 #include "json_helper.hpp"
 
 using namespace std;
-string JsonHelper::getJsonStringValue(Json::Value json, string key) {
-	const Json::Value valueJson = json.get(key.c_str(), false);
+string JsonHelper::getJsonStringValue(Json::Value json, const string& key) {
+	const Json::Value valueJson = json.get(key, false);
+	if (!valueJson.isString())
+		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
+	return valueJson.asString();
+}
+
+string JsonHelper::getJsonStringValue(Json::Value json, const string& key, const string defaultVal) {
+	const Json::Value valueJson = json.get(key, defaultVal);
 	if (!valueJson.isString())
 		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
 	return valueJson.asString();
 }
 
 #ifdef WIN32
-string JsonHelper::getJsonStringValue(Json::Value json, wstring key) {
+string JsonHelper::getJsonStringValue(Json::Value json, const wstring& key) {
 	const Json::Value valueJson = json.get(StringHelper::wideStringToString(key).c_str(), false);
 	if (!valueJson.isString())
 		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
 	return valueJson.asString();
 }
 
-wstring JsonHelper::getJsonWideStringValue(Json::Value json, wstring key) {
+wstring JsonHelper::getJsonWideStringValue(Json::Value json, const wstring& key) {
 	const Json::Value valueJson = json.get(StringHelper::wideStringToString(key).c_str(), false);
 	if (!valueJson.isString())
 		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
 	return StringHelper::stringToWideString(valueJson.asString());
 }
 
-wstring JsonHelper::getJsonWideStringValue(Json::Value json, string key) {
-	const Json::Value valueJson = json.get(key.c_str(), false);
+wstring JsonHelper::getJsonWideStringValue(Json::Value json, const string& key) {
+	const Json::Value valueJson = json.get(key, false);
+	if (!valueJson.isString())
+		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
+	return StringHelper::stringToWideString(valueJson.asString());
+}
+
+wstring JsonHelper::getJsonWideStringValue(Json::Value json, const wstring& key, const string defaultVal) {
+	const Json::Value valueJson = json.get(StringHelper::wideStringToString(key).c_str(), defaultVal);
+	if (!valueJson.isString())
+		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
+	return StringHelper::stringToWideString(valueJson.asString());
+}
+
+wstring JsonHelper::getJsonWideStringValue(Json::Value json, const string& key, const string defaultVal) {
+	const Json::Value valueJson = json.get(key, defaultVal);
 	if (!valueJson.isString())
 		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
 	return StringHelper::stringToWideString(valueJson.asString());

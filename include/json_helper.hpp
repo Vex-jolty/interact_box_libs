@@ -9,11 +9,14 @@
 
 class JsonHelper {
 	public:
-		static std::string getJsonStringValue(Json::Value json, std::string key);
+		static std::string getJsonStringValue(Json::Value json, const std::string& key);
+		static std::string getJsonStringValue(Json::Value json, const std::string& key, const std::string defaultVal);
 #ifdef WIN32
-		static std::string getJsonStringValue(Json::Value json, std::wstring key);
-		static std::wstring getJsonWideStringValue(Json::Value json, std::string key);
-		static std::wstring getJsonWideStringValue(Json::Value json, std::wstring key);
+		static std::string getJsonStringValue(Json::Value json, const std::wstring& key);
+		static std::wstring getJsonWideStringValue(Json::Value json, const std::string& key);
+		static std::wstring getJsonWideStringValue(Json::Value json, const std::wstring& key);
+		static std::wstring getJsonWideStringValue(Json::Value json, const std::string& key, const std::string defaultVal);
+		static std::wstring getJsonWideStringValue(Json::Value json, const std::wstring& key, const std::string defaultVal);
 #endif
 		static int getJsonIntValue(Json::Value json, std::string key);
 		static bool getJsonBoolValue(Json::Value json, std::string key);
