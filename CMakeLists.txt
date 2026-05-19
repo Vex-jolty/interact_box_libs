@@ -77,14 +77,21 @@ function(set_windows_version_definitions target version)
 		message(FATAL_ERROR "Unknown TARGET_WINDOWS_VERSION: ${version}")
 	endif()
 
-	target_compile_definitions(${target} INTERFACE
+	get_target_property(TARGET_TYPE ${target} TYPE)
+	if (TARGET_TYPE STREQUAL "INTERFACE_LIBRARY")
+		set(SCOPE "INTERFACE")
+	else()
+		set(SCOPE "PRIVATE")
+	endif()
+
+	target_compile_definitions(${target} ${SCOPE}
 		WINVER=${WINVER_VAL}
 		_WIN32_WINNT=${_WIN32_WINNT_VAL}
 		_WIN32_WINDOWS=${_WIN32_WINDOWS_VAL}
 	)
 	# Adding Unicode support to win2k and later
 	if(${WINVER_VAL} GREATER 0x0400)
-		target_compile_definitions(${target} INTERFACE
+		target_compile_definitions(${target} ${SCOPE}
 			UNICODE=ON
 			_UNICODE=ON
 		)

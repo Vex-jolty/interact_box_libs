@@ -1,4 +1,4 @@
-project(errors VERSION 1.0.0)
+project(errors VERSION 1.2.1)
 
 add_library(
 	${PROJECT_NAME} STATIC interact_box_exceptions.cpp

@@ -1,4 +1,4 @@
-project(json_helper VERSION 1.0.0)
+project(json_helper VERSION 1.2.1)
 
 add_library(
 	${PROJECT_NAME} STATIC
