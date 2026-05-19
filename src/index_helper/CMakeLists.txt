@@ -1,11 +1,11 @@
-project(IndexHelper VERSION 1.0.0)
+project(index_helper VERSION 1.0.0)
 
 add_library(
-	index_helper STATIC index_helper.cpp
+	${PROJECT_NAME} STATIC ${PROJECT_NAME}.cpp
 )
 
-determine_lib_extension(index_helper TRUE)
+determine_lib_extension(${PROJECT_NAME} TRUE)
 
-link_base_libs(index_helper ${TARGET_WINDOWS_VERSION} TRUE)
+link_base_libs(${PROJECT_NAME} ${TARGET_WINDOWS_VERSION} TRUE)
 
-target_link_libraries(index_helper PRIVATE platform_config)
+target_link_libraries(${PROJECT_NAME} PRIVATE platform_config)

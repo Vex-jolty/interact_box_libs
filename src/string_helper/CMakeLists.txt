@@ -1,11 +1,11 @@
-project(StringHelper VERSION 1.0.0)
+project(string_helper VERSION 1.0.0)
 
 add_library(
-	string_helper STATIC string_helper.cpp
+	${PROJECT_NAME} STATIC ${PROJECT_NAME}.cpp
 )
 	
-determine_lib_extension(string_helper TRUE)
+determine_lib_extension(${PROJECT_NAME} TRUE)
 
-link_base_libs(string_helper ${TARGET_WINDOWS_VERSION} TRUE)
+link_base_libs(${PROJECT_NAME} ${TARGET_WINDOWS_VERSION} TRUE)
 
-target_link_libraries(string_helper PRIVATE platform_config)
+target_link_libraries(${PROJECT_NAME} PRIVATE platform_config)

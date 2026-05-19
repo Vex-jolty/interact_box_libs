@@ -1,10 +1,10 @@
-project(FileHelper VERSION 1.0.0)
+project(file_helper VERSION 1.0.0)
 
 add_library(
-	file_helper STATIC file_helper.cpp
+	${PROJECT_NAME} STATIC ${PROJECT_NAME}.cpp
 )
 
-determine_lib_extension(file_helper TRUE)
+determine_lib_extension(${PROJECT_NAME} TRUE)
 
 link_base_libs(string_helper ${TARGET_WINDOWS_VERSION} TRUE)
 
@@ -20,4 +20,4 @@ else()
 	list(APPEND LIBS_TO_LINK Boost::filesystem)
 endif()
 list(APPEND LIBS_TO_LINK string_helper)
-target_link_libraries(file_helper PRIVATE ${LIBS_TO_LINK})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBS_TO_LINK})

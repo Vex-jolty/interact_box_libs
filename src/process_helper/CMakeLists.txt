@@ -1,11 +1,11 @@
-project(ProcessHelper VERSION 1.0.0)
+project(process_helper VERSION 1.0.0)
 
 add_library(
-	process_helper STATIC process_helper.cpp
+	${PROJECT_NAME} STATIC ${PROJECT_NAME}.cpp
 )
 
-determine_lib_extension(process_helper TRUE)
+determine_lib_extension(${PROJECT_NAME} TRUE)
 
-link_base_libs(process_helper ${TARGET_WINDOWS_VERSION} TRUE)
+link_base_libs(${PROJECT_NAME} ${TARGET_WINDOWS_VERSION} TRUE)
 
-target_link_libraries(process_helper PRIVATE platform_config string_helper)
+target_link_libraries(${PROJECT_NAME} PRIVATE platform_config string_helper)

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(InteractBoxLibs VERSION 1.1.0)
+project(interact_box_libs VERSION 1.1.0)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -183,8 +183,8 @@ install(
 
 install(
 	EXPORT InteractBoxLibsTargets
-	NAMESPACE InteractBoxLibs::
-	DESTINATION lib/cmake/InteractBoxLibs
+	NAMESPACE ${PROJECT_NAME}::
+	DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
 install(
@@ -197,10 +197,10 @@ include(CMakePackageConfigHelpers)
 configure_package_config_file(
 	cmake/InteractBoxLibsConfig.cmake.in
 	${CMAKE_CURRENT_BINARY_DIR}/InteractBoxLibsConfig.cmake
-	INSTALL_DESTINATION lib/cmake/InteractBoxLibs
+	INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
 install(
 	FILES ${CMAKE_CURRENT_BINARY_DIR}/InteractBoxLibsConfig.cmake
-	DESTINATION lib/cmake/InteractBoxLibs
+	DESTINATION lib/cmake/${PROJECT_NAME}
 )

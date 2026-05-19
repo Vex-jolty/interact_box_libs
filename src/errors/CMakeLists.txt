@@ -1,9 +1,9 @@
-project(Errors VERSION 1.0.0)
+project(errors VERSION 1.0.0)
 
 add_library(
-	errors STATIC interact_box_exceptions.cpp
+	${PROJECT_NAME} STATIC interact_box_exceptions.cpp
 )
 
-determine_lib_extension(errors TRUE)
+determine_lib_extension(${PROJECT_NAME} TRUE)
 
-target_link_libraries(errors PRIVATE platform_config string_helper)
+target_link_libraries(${PROJECT_NAME} PRIVATE platform_config string_helper)

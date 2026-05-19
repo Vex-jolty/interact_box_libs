@@ -1,12 +1,12 @@
-project(LoggingLevel VERSION 1.0.0)
+project(logging_level VERSION 1.0.0)
 
 # Logging is a static library to avoid conflicts during linking
 add_library(
-	logging_level STATIC logging_level.cpp
+	${PROJECT_NAME} STATIC ${PROJECT_NAME}.cpp
 )
 
-determine_lib_extension(logging_level TRUE)
+determine_lib_extension(${PROJECT_NAME} TRUE)
 
 link_base_libs(index_helper ${TARGET_WINDOWS_VERSION} TRUE)
 
-target_link_libraries(logging_level PRIVATE platform_config)
+target_link_libraries(${PROJECT_NAME} PRIVATE platform_config)
