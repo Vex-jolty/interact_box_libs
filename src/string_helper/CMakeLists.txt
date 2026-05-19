@@ -1,4 +1,4 @@
-project(string_helper VERSION 1.2.1)
+project(string_helper VERSION 1.2.2)
 
 add_library(
 	${PROJECT_NAME} STATIC ${PROJECT_NAME}.cpp
