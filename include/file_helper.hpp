@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #ifdef WIN32
+	#include <winsock2.h>
 	#include <windows.h>
 	#include <winver.h>
 	#include <shlobj.h>

@@ -4,6 +4,7 @@
 #include "string_helper.hpp"
 #include <string>
 #ifdef WIN32
+	#include <winsock2.h>
 	#include <windows.h>
 	#include <tlhelp32.h>
 	#include <tchar.h>
@@ -17,7 +18,13 @@
 #endif
 #include <boost/algorithm/string.hpp>
 
-#if defined(WIN32) && WINVER > _WIN32_WINNT_NT4
+#ifdef WIN32
+struct WindowSearchData {
+		DWORD targetProcessId;
+		HWND foundHwnd;
+};
+
+	#if WINVER > _WIN32_WINNT_NT4
 struct ProcessPathAndPID {
 		std::wstring path;
 		DWORD pid;
@@ -27,11 +34,12 @@ struct ANSIProcessPathAndPID {
 		std::string path;
 		DWORD pid;
 };
-#elif defined(WIN32)
+	#else
 struct ProcessPathAndPID {
 		std::string path;
 		DWORD pid;
 };
+	#endif
 #else
 
 struct ProcessPathAndPID {

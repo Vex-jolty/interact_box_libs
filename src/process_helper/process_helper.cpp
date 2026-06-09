@@ -146,11 +146,15 @@ ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<wstring> paths) {
 	#endif
 
 BOOL CALLBACK ProcessHelper::enumWindowsProc(HWND hwnd, LPARAM lParam) {
+	WindowSearchData* data = reinterpret_cast<WindowSearchData*>(lParam);
 	DWORD processId;
 	GetWindowThreadProcessId(hwnd, &processId);
 
-	if (processId == *((DWORD*)lParam)) {
-		*((HWND*)lParam) = hwnd;
+	if (processId == data->targetProcessId) {
+		if (!IsWindowVisible(hwnd) || GetWindow(hwnd, GW_OWNER) != NULL) {
+			return TRUE;
+		}
+		data->foundHwnd = hwnd;
 		return FALSE;
 	}
 
@@ -177,10 +181,9 @@ BOOL CALLBACK ProcessHelper::enumDisplayWindows(HWND hwnd, LPARAM lParam) {
 }
 
 HWND ProcessHelper::findMainWindow(const wstring& path) {
-	HWND hwnd = NULL;
 	DWORD processId = getProcessId(path);
-	EnumWindows(enumWindowsProc, (LPARAM)&processId);
-	return (HWND)processId;
+	if (processId == 0) return NULL;
+	return findMainWindow(processId);
 }
 
 HWND ProcessHelper::findDisplaySettingsWindow() {
@@ -212,16 +215,17 @@ void ProcessHelper::killProcess(const wstring& path, int exitCode) {
 	#endif
 
 HWND ProcessHelper::findMainWindow(DWORD processId) {
-	HWND hwnd = NULL;
-	EnumWindows(enumWindowsProc, (LPARAM)&processId);
-	return (HWND)processId;
+	WindowSearchData data;
+	data.targetProcessId = processId;
+	data.foundHwnd = NULL;
+	EnumWindows(enumWindowsProc, reinterpret_cast<LPARAM>(&data));
+	return data.foundHwnd;
 }
 
 HWND ProcessHelper::findMainWindow(const string& path) {
-	HWND hwnd = NULL;
 	DWORD processId = getProcessId(path);
-	EnumWindows(enumWindowsProc, (LPARAM)&processId);
-	return (HWND)processId;
+	if (processId == 0) return NULL;
+	return findMainWindow(processId);
 }
 
 void ProcessHelper::setToForeground(HWND hwnd) {
