@@ -214,7 +214,7 @@ namespace ErrorCodes {
 			case SocketCreationFailed:
 				return "Socket creation failed";
 			case CannotBindToSocket:
-				return "Cannot bind to socket";
+				return "Cannot bind to socket. Maybe you can try a different port or host?";
 			case CannotListenToSocket:
 				return "Cannot listen to socket";
 			case CannotSendResponse:
