@@ -24,6 +24,7 @@
 class FileHelper {
 	public:
 #ifdef WIN32
+		static std::string getConfigDirectory();
 	#if WINVER > _WIN32_WINNT_NT4
 		static bool fileHasValidExtension(
 			const std::wstring& fileName,
@@ -47,6 +48,7 @@ class FileHelper {
 		static void writeToFile(HANDLE hFile, std::wstring content);
 
 		static std::wstring getWindowsDirectory();
+		static std::string getWindowsDirectoryAsString();
 
 		static bool checkIfFileExists(std::wstring filePath);
 
@@ -76,6 +78,7 @@ class FileHelper {
 
 		#if WINVER >= _WIN32_WINNT_VISTA
 		static std::wstring getAppDataPath();
+		static std::string getAppDataPathAsString();
 		#endif
 
 		static bool copyFile(std::wstring oldPath, std::wstring newPath);

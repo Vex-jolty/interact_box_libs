@@ -2,11 +2,22 @@
 
 using namespace std;
 #ifdef WIN32
+
+string FileHelper::getConfigDirectory() {
+	#if WINVER <= _WIN32_WINNT_WINXP
+	return FileHelper::getWindowsDirectoryAsString();
+	#else
+	return FileHelper::getAppDataPathAsString() + "\\Interact Box";
+	#endif
+}
+
 	#if WINVER > _WIN32_WINNT_NT4
 bool FileHelper::fileHasValidExtension(const wstring& fileName, vector<wstring> extensions) {
 	for (const auto& ext : extensions) {
-		if (fileName.size() < ext.size() ||
-				fileName.compare(fileName.size() - ext.size(), ext.size(), ext) != 0) {
+		if (
+			fileName.size() < ext.size() ||
+			fileName.compare(fileName.size() - ext.size(), ext.size(), ext) != 0
+		) {
 			continue;
 		}
 		return true;
@@ -113,6 +124,12 @@ wstring FileHelper::getWindowsDirectory() {
 	return windowsDir;
 }
 
+string FileHelper::getWindowsDirectoryAsString() {
+	char windowsDir[MAX_PATH];
+	GetWindowsDirectoryA(windowsDir, MAX_PATH);
+	return windowsDir;
+}
+
 void FileHelper::createDirectory(wstring dirPath) {
 	bool success = CreateDirectoryW(dirPath.c_str(), NULL);
 	if (!success)
@@ -177,7 +194,6 @@ void FileHelper::writeToFile(wstring filePath, string content) {
 	closeFile(hFile);
 }
 
-
 HANDLE FileHelper::loadImageFile(wstring filePath) {
 	return LoadImageW(NULL, filePath.c_str(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 }
@@ -206,6 +222,11 @@ wstring FileHelper::getAppDataPath() {
 	wchar_t* path;
 	SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, NULL, &path);
 	return wstring(path);
+}
+
+string FileHelper::getAppDataPathAsString() {
+	const wstring path = getAppDataPath();
+	return StringHelper::wideStringToString(path);
 }
 		#endif
 
@@ -268,10 +289,13 @@ bool FileHelper::copyFile(wstring oldPath, wstring newPath) {
 }
 
 	#else
+
 bool FileHelper::fileHasValidExtension(const string& fileName, vector<string> extensions) {
 	for (const auto& ext : extensions) {
-		if (fileName.size() < ext.size() ||
-				fileName.compare(fileName.size() - ext.size(), ext.size(), ext) != 0) {
+		if (
+			fileName.size() < ext.size() ||
+			fileName.compare(fileName.size() - ext.size(), ext.size(), ext) != 0
+		) {
 			continue;
 		}
 		return true;
@@ -516,8 +540,10 @@ namespace fs = std::filesystem;
 
 bool FileHelper::fileHasValidExtension(const string& fileName, vector<string> extensions) {
 	for (const auto& ext : extensions) {
-		if (fileName.size() < ext.size() ||
-				fileName.compare(fileName.size() - ext.size(), ext.size(), ext) != 0) {
+		if (
+			fileName.size() < ext.size() ||
+			fileName.compare(fileName.size() - ext.size(), ext.size(), ext) != 0
+		) {
 			continue;
 		}
 		return true;
