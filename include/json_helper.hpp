@@ -25,7 +25,7 @@ class JsonHelper {
 		template <typename T> static std::vector<T> getJsonArray(Json::Value json, std::string key) {
 			const Json::Value valueJson = json.get(key.c_str(), false);
 			if (!valueJson.isArray())
-				throw InteractBoxException(ErrorCodes::JSONNotAnArray, key);
+				throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotAnArray, key);
 			int size = valueJson.size();
 			std::vector<T> result;
 			result.reserve(size);
@@ -40,7 +40,7 @@ class JsonHelper {
 
 		template <typename T> static std::vector<T> getJsonArray(Json::Value json) {
 			if (!json.isArray())
-				throw InteractBoxException(ErrorCodes::JSONNotAnArray);
+				throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotAnArray);
 			int size = json.size();
 			std::vector<T> result;
 			result.reserve(size);

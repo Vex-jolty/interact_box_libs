@@ -2,7 +2,7 @@
 #include "errors.hpp"
 
 namespace ErrorCodes {
-	enum ErrorCode {
+	enum class ErrorCode {
 		// File errors
 		CannotOpenFile,
 		CannotReadFile,
@@ -36,13 +36,14 @@ namespace ErrorCodes {
 		// Time error
 		CannotSetSystemDateTime,
 
-		// DOS errors
+		// DOS/Terminal errors
 		DelCommand,
 		DelTreeCommand,
 		EraseCommand,
 		TriviaGameCommand,
 		MalwareCommand,
 		RemoveItemCommand,
+		RmCommand,
 
 		// File collection errors
 		MalwareFilesNotFound,
@@ -125,155 +126,157 @@ namespace ErrorCodes {
 
 	inline std::string getErrorMessage(ErrorCode code) {
 		switch (code) {
-			case CannotOpenFile:
+			case ErrorCode::CannotOpenFile:
 				return "Cannot open file";
-			case CannotReadFile:
+			case ErrorCode::CannotReadFile:
 				return "Cannot read file";
-			case CannotDeleteFile:
+			case ErrorCode::CannotDeleteFile:
 				return "Cannot delete file";
-			case CannotAccessDirectory:
+			case ErrorCode::CannotAccessDirectory:
 				return "Cannot access directory";
-			case CannotDeleteDirectory:
+			case ErrorCode::CannotDeleteDirectory:
 				return "Cannot delete directory";
-			case InvalidFileHandle:
+			case ErrorCode::InvalidFileHandle:
 				return "Invalid file handle";
-			case InvalidFileSize:
+			case ErrorCode::InvalidFileSize:
 				return "Invalid file size";
-			case CannotCloseHandle:
+			case ErrorCode::CannotCloseHandle:
 				return "Cannot close handle";
-			case CannotWriteToFile:
+			case ErrorCode::CannotWriteToFile:
 				return "Cannot write to file";
-			case CannotSetWallpaper:
+			case ErrorCode::CannotSetWallpaper:
 				return "Cannot set wallpaper";
-			case CannotRenameFile:
+			case ErrorCode::CannotRenameFile:
 				return "Cannot rename file";
-			case CannotCreateDirectory:
+			case ErrorCode::CannotCreateDirectory:
 				return "Cannot create directory";
-			case CannotOpenRegistryKey:
+			case ErrorCode::CannotOpenRegistryKey:
 				return "Cannot open registry key";
-			case CannotSetRegistryKey:
+			case ErrorCode::CannotSetRegistryKey:
 				return "Cannot set registry key";
-			case CannotGetRegistryKey:
+			case ErrorCode::CannotGetRegistryKey:
 				return "Cannot get registry key";
-			case CannotEnumerateRegistryKeys:
+			case ErrorCode::CannotEnumerateRegistryKeys:
 				return "Cannot enumerate registry keys";
-			case CannotCloseRegistryKey:
+			case ErrorCode::CannotCloseRegistryKey:
 				return "Cannot close registry key";
-			case CannotDeleteRegistryKey:
+			case ErrorCode::CannotDeleteRegistryKey:
 				return "Cannot delete registry key";
-			case CannotCallFromShell:
+			case ErrorCode::CannotCallFromShell:
 				return "Cannot call the following from shell:";
-			case CannotEnumerateDisplaySettings:
+			case ErrorCode::CannotEnumerateDisplaySettings:
 				return "Cannot enumerate display settings";
-			case CannotChangeDisplay:
+			case ErrorCode::CannotChangeDisplay:
 				return "Cannot change display";
-			case CannotSetSystemDateTime:
+			case ErrorCode::CannotSetSystemDateTime:
 				return "Cannot set system date and time";
-			case InvalidColorSetting:
+			case ErrorCode::InvalidColorSetting:
 				return "Invalid color setting";
-			case DelCommand:
+			case ErrorCode::DelCommand:
 				// cSpell:disable
 				return "Del more like DELight yourself with deez nuts lmao gottem";
 			// cSpell:enable
-			case RemoveItemCommand:
+			case ErrorCode::RemoveItemCommand:
 				return "Remove this!";
-			case DelTreeCommand:
+			case ErrorCode::RmCommand:
+				return "Oh wow, rm -rf /. Very original.";
+			case ErrorCode::DelTreeCommand:
 				return "Tree deletion attempt detected. Environmental authorities notified.";
-			case EraseCommand:
+			case ErrorCode::EraseCommand:
 				return "Trying to get around the DEL ban by using ERASE is not clever.";
-			case TriviaGameCommand:
+			case ErrorCode::TriviaGameCommand:
 				return "May not open trivia game via CMD. Use the proper redeem.";
-			case MalwareCommand:
+			case ErrorCode::MalwareCommand:
 				return "May not open or manipulate malware files via CMD. Use the proper redeem.";
-			case MalwareFilesNotFound:
+			case ErrorCode::MalwareFilesNotFound:
 				return "Malware files not found";
-			case SoundPacksNotFound:
+			case ErrorCode::SoundPacksNotFound:
 				return "Sound packs not found";
-			case WallpapersNotFound:
+			case ErrorCode::WallpapersNotFound:
 				return "Wallpapers not found";
-			case MidiFilesNotFound:
+			case ErrorCode::MidiFilesNotFound:
 				return "Midi files not found";
-			case ThemeFilesNotFound:
+			case ErrorCode::ThemeFilesNotFound:
 				return "Theme files not found";
-			case NoSuchFiles:
+			case ErrorCode::NoSuchFiles:
 				return "No such files";
-			case CannotGetSIDFromAccountName:
+			case ErrorCode::CannotGetSIDFromAccountName:
 				return "Cannot get SID from account name";
-			case CannotChangeOwnership:
+			case ErrorCode::CannotChangeOwnership:
 				return "Cannot change ownership";
-			case CannotGetSID:
+			case ErrorCode::CannotGetSID:
 				return "Cannot get SID";
-			case CannotSetAudioFile:
+			case ErrorCode::CannotSetAudioFile:
 				return "Cannot set audio file";
-			case CannotFindWindow:
+			case ErrorCode::CannotFindWindow:
 				return "Cannot find window";
-			case CannotFindButton:
+			case ErrorCode::CannotFindButton:
 				return "Cannot find button";
-			case WinSockStartupFailed:
+			case ErrorCode::WinSockStartupFailed:
 				return "Windows Socket startup failed";
-			case SocketCreationFailed:
+			case ErrorCode::SocketCreationFailed:
 				return "Socket creation failed";
-			case CannotBindToSocket:
+			case ErrorCode::CannotBindToSocket:
 				return "Cannot bind to socket. Maybe you can try a different port or host?";
-			case CannotListenToSocket:
+			case ErrorCode::CannotListenToSocket:
 				return "Cannot listen to socket";
-			case CannotSendResponse:
+			case ErrorCode::CannotSendResponse:
 				return "Cannot send response";
-			case JSONNotAString:
+			case ErrorCode::JSONNotAString:
 				return "Not a JSON string";
-			case JSONNotANumber:
+			case ErrorCode::JSONNotANumber:
 				return "Not a JSON number";
-			case JSONNotAnArray:
+			case ErrorCode::JSONNotAnArray:
 				return "Not a JSON array";
-			case JSONNotAnObject:
+			case ErrorCode::JSONNotAnObject:
 				return "Not a JSON object";
-			case JSONNotABoolean:
+			case ErrorCode::JSONNotABoolean:
 				return "Not a JSON boolean";
-			case InvalidJSON:
+			case ErrorCode::InvalidJSON:
 				return "Invalid JSON";
-			case TriviaItemNotFound:
+			case ErrorCode::TriviaItemNotFound:
 				return "Trivia Item Not Found";
-			case TriviaQuestionNotFound:
+			case ErrorCode::TriviaQuestionNotFound:
 				return "Trivia Question Not Found";
-			case TriviaAnswersNotFound:
+			case ErrorCode::TriviaAnswersNotFound:
 				return "Trivia Answers Not Found";
-			case TriviaCorrectAnswerNotFound:
+			case ErrorCode::TriviaCorrectAnswerNotFound:
 				return "Trivia Correct Answer Not Found";
-			case CannotCreateSound:
+			case ErrorCode::CannotCreateSound:
 				return "Cannot Create Sound";
-			case CannotPlaySound:
+			case ErrorCode::CannotPlaySound:
 				return "Cannot Play Sound";
-			case ArgumentIsNull:
+			case ErrorCode::ArgumentIsNull:
 				return "Argument is null";
-			case CannotRegisterWindowClass:
+			case ErrorCode::CannotRegisterWindowClass:
 				return "Cannot register window class";
-			case CannotCreateWindow:
+			case ErrorCode::CannotCreateWindow:
 				return "Cannot create window";
-			case CannotShowWindow:
+			case ErrorCode::CannotShowWindow:
 				return "Cannot show window";
-			case CannotUpdateWindow:
+			case ErrorCode::CannotUpdateWindow:
 				return "Cannot update window";
-			case RouteIsDisabled:
+			case ErrorCode::RouteIsDisabled:
 				return "Route is disabled";
-			case CannotCloseProcess:
+			case ErrorCode::CannotCloseProcess:
 				return "Cannot close process";
-			case CannotOpenProcess:
+			case ErrorCode::CannotOpenProcess:
 				return "Cannot open process";
-			case CannotTerminateProcess:
+			case ErrorCode::CannotTerminateProcess:
 				return "Cannot terminate process";
-			case InvalidHost:
+			case ErrorCode::InvalidHost:
 				return "Invalid host";
-			case CannotLookUpPrivileges:
+			case ErrorCode::CannotLookUpPrivileges:
 				return "Cannot look up privileges";
-			case CannotAdjustPrivileges:
+			case ErrorCode::CannotAdjustPrivileges:
 				return "Cannot adjust privileges";
-			case CannotReboot:
+			case ErrorCode::CannotReboot:
 				return "Cannot reboot";
-			case IllegalDirectoryManipulation:
+			case ErrorCode::IllegalDirectoryManipulation:
 				return "Illegal directory manipulation";
-			case CannotLockMutex:
+			case ErrorCode::CannotLockMutex:
 				return "Cannot lock mutex";
-			case UnsupportedFeature:
+			case ErrorCode::UnsupportedFeature:
 				return "Unsupported feature";
 			default:
 				return "Seeing this error message should not be possible, please report this incident to "

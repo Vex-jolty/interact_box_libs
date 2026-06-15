@@ -4,14 +4,14 @@ using namespace std;
 string JsonHelper::getJsonStringValue(Json::Value json, const string& key) {
 	const Json::Value valueJson = json.get(key, false);
 	if (!valueJson.isString())
-		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
+		throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotAString, key);
 	return valueJson.asString();
 }
 
 string JsonHelper::getJsonStringValue(Json::Value json, const string& key, const string defaultVal) {
 	const Json::Value valueJson = json.get(key, defaultVal);
 	if (!valueJson.isString())
-		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
+		throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotAString, key);
 	return valueJson.asString();
 }
 
@@ -19,35 +19,35 @@ string JsonHelper::getJsonStringValue(Json::Value json, const string& key, const
 string JsonHelper::getJsonStringValue(Json::Value json, const wstring& key) {
 	const Json::Value valueJson = json.get(StringHelper::wideStringToString(key).c_str(), false);
 	if (!valueJson.isString())
-		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
+		throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotAString, key);
 	return valueJson.asString();
 }
 
 wstring JsonHelper::getJsonWideStringValue(Json::Value json, const wstring& key) {
 	const Json::Value valueJson = json.get(StringHelper::wideStringToString(key).c_str(), false);
 	if (!valueJson.isString())
-		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
+		throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotAString, key);
 	return StringHelper::stringToWideString(valueJson.asString());
 }
 
 wstring JsonHelper::getJsonWideStringValue(Json::Value json, const string& key) {
 	const Json::Value valueJson = json.get(key, false);
 	if (!valueJson.isString())
-		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
+		throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotAString, key);
 	return StringHelper::stringToWideString(valueJson.asString());
 }
 
 wstring JsonHelper::getJsonWideStringValue(Json::Value json, const wstring& key, const string defaultVal) {
 	const Json::Value valueJson = json.get(StringHelper::wideStringToString(key).c_str(), defaultVal);
 	if (!valueJson.isString())
-		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
+		throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotAString, key);
 	return StringHelper::stringToWideString(valueJson.asString());
 }
 
 wstring JsonHelper::getJsonWideStringValue(Json::Value json, const string& key, const string defaultVal) {
 	const Json::Value valueJson = json.get(key, defaultVal);
 	if (!valueJson.isString())
-		throw InteractBoxException(ErrorCodes::JSONNotAString, key);
+		throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotAString, key);
 	return StringHelper::stringToWideString(valueJson.asString());
 }
 #endif
@@ -55,21 +55,21 @@ wstring JsonHelper::getJsonWideStringValue(Json::Value json, const string& key, 
 int JsonHelper::getJsonIntValue(Json::Value json, string key) {
 	const Json::Value valueJson = json.get(key, "");
 	if (!valueJson.isInt())
-		throw InteractBoxException(ErrorCodes::JSONNotANumber, key);
+		throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotANumber, key);
 	return valueJson.asInt();
 }
 
 bool JsonHelper::getJsonBoolValue(Json::Value json, string key) {
 	const Json::Value valueJson = json.get(key.c_str(), "");
 	if (!valueJson.isBool())
-		throw InteractBoxException(ErrorCodes::JSONNotABoolean, key);
+		throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotABoolean, key);
 	return valueJson.asBool();
 }
 
 vector<string> JsonHelper::getJsonStringArray(Json::Value json, string key) {
 	const Json::Value valueJson = json.get(key.c_str(), false);
 	if (!valueJson.isArray())
-		throw InteractBoxException(ErrorCodes::JSONNotAnArray, key);
+		throw InteractBoxException(ErrorCodes::ErrorCode::JSONNotAnArray, key);
 	int size = valueJson.size();
 	vector<string> result;
 	result.reserve(size);
@@ -106,6 +106,6 @@ Json::Value JsonHelper::parseJsonString(string jsonString) {
 	Json::Reader reader;
 	bool success = reader.parse(jsonString, parsedBody);
 	if (!success)
-		throw InteractBoxException(ErrorCodes::InvalidJSON);
+		throw InteractBoxException(ErrorCodes::ErrorCode::InvalidJSON);
 	return parsedBody;
 }

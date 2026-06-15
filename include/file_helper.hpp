@@ -65,7 +65,7 @@ class FileHelper {
 			std::wstring directory
 		);
 
-		static bool deleteFile(std::wstring fileName);
+		static bool deleteFile(const std::wstring& fileName);
 
 		static std::vector<std::wstring> listFiles(const std::wstring& directory);
 		static std::vector<std::wstring> listFilesWithoutFailures(const std::wstring& directory);
@@ -134,7 +134,7 @@ class FileHelper {
 		static long getFileSize(HANDLE hFile);
 		static void closeFile(HANDLE hFile);
 
-		static bool deleteFile(std::string fileName);
+		static bool deleteFile(const std::string& fileName);
 
 		static bool copyFile(std::string oldPath, std::string newPath);
 #else
@@ -143,13 +143,13 @@ class FileHelper {
 			std::vector<std::string> extensions
 		);
 
-		static void removeFolder(std::string folder);
+		static void removeFolder(const std::string& folder);
 
-		static bool checkIfFileExists(std::string filePath);
+		static bool checkIfFileExists(const std::string& filePath);
 
-		static bool renameFile(std::string oldPath, std::string newPath);
+		static bool renameFile(const std::string& oldPath, const std::string& newPath);
 
-		static bool isInsideDirectory(std::string& file, std::string& directory);
+		static bool isInsideDirectory(const std::string& file, const std::string& directory);
 
 		static std::vector<std::string> filterFiles(
 			std::vector<std::string> files,
@@ -167,19 +167,19 @@ class FileHelper {
 		static std::string getWorkingDirectory();
 
 		static std::string getVolumeSerial();
-		static std::ofstream makeFile(std::string filePath, bool createNew = true);
+		static std::ofstream makeFile(const std::string& filePath, bool createNew = true);
 
-		static std::string getFileVersion(std::string filePath);
+		static std::string getFileVersion(const std::string& filePath);
 
-		static void createDirectory(std::string dirPath);
+		static void createDirectory(const std::string& dirPath);
 
 		static std::string readFileAsString(std::string filePath);
 
-		static void writeToFile(std::string filePath, std::string content);
+		static void writeToFile(const std::string& filePath, std::string content);
 
 		static long getFileSize(std::string& path);
 
-		static bool deleteFile(std::string fileName);
+		static bool deleteFile(const std::string& fileName);
 
 		static bool copyFile(std::string oldPath, std::string newPath);
 #endif

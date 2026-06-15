@@ -31,7 +31,7 @@ vector<wstring> FileHelper::listFiles(const wstring& directory) {
 	HANDLE hFind = FindFirstFileW((directory + L"\\*").c_str(), &findFileData);
 
 	if (hFind == INVALID_HANDLE_VALUE) {
-		throw InteractBoxException(ErrorCodes::CannotAccessDirectory, directory);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotAccessDirectory, directory);
 	}
 
 	do {
@@ -82,7 +82,7 @@ vector<wstring> FileHelper::listFilesWithoutFailures(const wstring& directory) {
 void FileHelper::removeFolder(wstring folder) {
 	bool success = RemoveDirectory(folder.c_str());
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotDeleteDirectory, folder);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotDeleteDirectory, folder);
 }
 
 wstring FileHelper::getExecutableFileName() {
@@ -133,7 +133,7 @@ string FileHelper::getWindowsDirectoryAsString() {
 void FileHelper::createDirectory(wstring dirPath) {
 	bool success = CreateDirectoryW(dirPath.c_str(), NULL);
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotCreateDirectory, dirPath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotCreateDirectory, dirPath);
 }
 
 string FileHelper::readFileAsString(wstring filePath) {
@@ -142,12 +142,12 @@ string FileHelper::readFileAsString(wstring filePath) {
 		NULL
 	);
 	if (hFile == INVALID_HANDLE_VALUE) {
-		throw InteractBoxException(ErrorCodes::InvalidFileHandle, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::InvalidFileHandle, filePath);
 	}
 	DWORD fileSize = GetFileSize(hFile, NULL);
 	DWORD bytesRead;
 	if (fileSize == INVALID_FILE_SIZE) {
-		throw InteractBoxException(ErrorCodes::InvalidFileSize, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::InvalidFileSize, filePath);
 	}
 	wchar_t* buffer = new wchar_t[fileSize];
 	ReadFile(hFile, buffer, fileSize, &bytesRead, NULL);
@@ -161,12 +161,12 @@ wstring FileHelper::readFileAsWideString(wstring filePath) {
 		NULL
 	);
 	if (hFile == INVALID_HANDLE_VALUE) {
-		throw InteractBoxException(ErrorCodes::InvalidFileHandle, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::InvalidFileHandle, filePath);
 	}
 	DWORD fileSize = GetFileSize(hFile, NULL);
 	DWORD bytesRead;
 	if (fileSize == INVALID_FILE_SIZE) {
-		throw InteractBoxException(ErrorCodes::InvalidFileSize, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::InvalidFileSize, filePath);
 	}
 	wchar_t* buffer = new wchar_t[fileSize];
 	ReadFile(hFile, buffer, fileSize, &bytesRead, NULL);
@@ -179,7 +179,7 @@ void FileHelper::writeToFile(wstring filePath, wstring content) {
 	DWORD bytesWritten;
 	bool writeOk = WriteFile(hFile, content.c_str(), content.size(), &bytesWritten, NULL);
 	if (!writeOk) {
-		throw InteractBoxException(ErrorCodes::CannotWriteToFile, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotWriteToFile, filePath);
 	}
 	closeFile(hFile);
 }
@@ -189,7 +189,7 @@ void FileHelper::writeToFile(wstring filePath, string content) {
 	DWORD bytesWritten;
 	bool writeOk = WriteFile(hFile, content.c_str(), content.size(), &bytesWritten, NULL);
 	if (!writeOk) {
-		throw InteractBoxException(ErrorCodes::CannotWriteToFile, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotWriteToFile, filePath);
 	}
 	closeFile(hFile);
 }
@@ -204,12 +204,12 @@ wstring FileHelper::readFileAsWideString(string filePath) {
 		NULL
 	);
 	if (hFile == INVALID_HANDLE_VALUE) {
-		throw InteractBoxException(ErrorCodes::InvalidFileHandle, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::InvalidFileHandle, filePath);
 	}
 	DWORD fileSize = GetFileSize(hFile, NULL);
 	DWORD bytesRead;
 	if (fileSize == INVALID_FILE_SIZE) {
-		throw InteractBoxException(ErrorCodes::InvalidFileSize, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::InvalidFileSize, filePath);
 	}
 	char* buffer = new char[fileSize];
 	ReadFile(hFile, buffer, fileSize, &bytesRead, NULL);
@@ -250,7 +250,7 @@ void FileHelper::writeToFile(HANDLE hFile, wstring content) {
 	DWORD bytesWritten;
 	bool writeOk = WriteFile(hFile, content.c_str(), content.size(), &bytesWritten, NULL);
 	if (!writeOk) {
-		throw InteractBoxException(ErrorCodes::CannotWriteToFile);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotWriteToFile);
 	}
 }
 
@@ -282,7 +282,7 @@ vector<wstring> FileHelper::filterFiles(vector<wstring> files, wstring directory
 	return filteredFiles;
 }
 
-bool FileHelper::deleteFile(wstring fileName) { return DeleteFileW(fileName.c_str()); }
+bool FileHelper::deleteFile(const wstring& fileName) { return DeleteFileW(fileName.c_str()); }
 
 bool FileHelper::copyFile(wstring oldPath, wstring newPath) {
 	return CopyFileW(oldPath.c_str(), newPath.c_str(), false);
@@ -309,7 +309,7 @@ vector<string> FileHelper::listFiles(const string& directory) {
 	HANDLE hFind = FindFirstFileA((directory + "\\*").c_str(), &findFileData);
 
 	if (hFind == INVALID_HANDLE_VALUE) {
-		throw InteractBoxException(ErrorCodes::CannotAccessDirectory, directory);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotAccessDirectory, directory);
 	}
 
 	do {
@@ -376,7 +376,7 @@ bool FileHelper::renameFile(string oldPath, string newPath) {
 void FileHelper::removeFolder(string folder) {
 	bool success = RemoveDirectoryA(folder.c_str());
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotDeleteDirectory, folder);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotDeleteDirectory, folder);
 }
 
 string FileHelper::getExecutableFileName() {
@@ -474,7 +474,7 @@ string FileHelper::getFileVersion(string filePath) {
 void FileHelper::createDirectory(string dirPath) {
 	bool success = CreateDirectoryA(dirPath.c_str(), NULL);
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotCreateDirectory, dirPath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotCreateDirectory, dirPath);
 }
 
 string FileHelper::readFileAsString(string filePath) {
@@ -483,12 +483,12 @@ string FileHelper::readFileAsString(string filePath) {
 		NULL
 	);
 	if (hFile == INVALID_HANDLE_VALUE) {
-		throw InteractBoxException(ErrorCodes::InvalidFileHandle, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::InvalidFileHandle, filePath);
 	}
 	DWORD fileSize = GetFileSize(hFile, NULL);
 	DWORD bytesRead;
 	if (fileSize == INVALID_FILE_SIZE) {
-		throw InteractBoxException(ErrorCodes::InvalidFileSize, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::InvalidFileSize, filePath);
 	}
 	char* buffer = new char[fileSize];
 	ReadFile(hFile, buffer, fileSize, &bytesRead, NULL);
@@ -503,7 +503,7 @@ HANDLE FileHelper::loadImageFile(string filePath) {
 void FileHelper::closeFile(HANDLE hFile) {
 	bool closeOk = CloseHandle(hFile);
 	if (!closeOk) {
-		throw InteractBoxException(ErrorCodes::CannotCloseHandle);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotCloseHandle);
 	}
 }
 
@@ -512,7 +512,7 @@ void FileHelper::writeToFile(string filePath, string content) {
 	DWORD bytesWritten;
 	bool writeOk = WriteFile(hFile, content.c_str(), content.size(), &bytesWritten, NULL);
 	if (!writeOk) {
-		throw InteractBoxException(ErrorCodes::CannotWriteToFile, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotWriteToFile, filePath);
 	}
 	closeFile(hFile);
 }
@@ -521,7 +521,7 @@ void FileHelper::writeToFile(HANDLE hFile, string content) {
 	DWORD bytesWritten;
 	bool writeOk = WriteFile(hFile, content.c_str(), content.size(), &bytesWritten, NULL);
 	if (!writeOk) {
-		throw InteractBoxException(ErrorCodes::CannotWriteToFile);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotWriteToFile);
 	}
 }
 
@@ -530,7 +530,7 @@ long FileHelper::getFileSize(HANDLE hFile) {
 	return size;
 }
 
-bool FileHelper::deleteFile(string fileName) { return DeleteFileA(fileName.c_str()); }
+bool FileHelper::deleteFile(const string& fileName) { return DeleteFileA(fileName); }
 
 bool FileHelper::copyFile(string oldPath, string newPath) {
 	return CopyFileA(oldPath.c_str(), newPath.c_str(), false);
@@ -553,31 +553,32 @@ bool FileHelper::fileHasValidExtension(const string& fileName, vector<string> ex
 
 vector<string> FileHelper::listFiles(const string& directory) {
 	vector<string> files;
-	for (const auto& entry : fs::directory_iterator(directory)) {
+	for (const auto& entry : fs::recursive_directory_iterator(directory)) {
+		if (entry.is_directory()) continue;
 		files.push_back(entry.path().c_str());
 	}
 	return files;
 }
 
-bool FileHelper::isInsideDirectory(string& file, string& directory) {
+bool FileHelper::isInsideDirectory(const string& file, const string& directory) {
 	vector<string> splitFile = StringHelper::splitString(file, "/");
 	splitFile.pop_back();
 	string fileDirectory = boost::algorithm::join(splitFile, "/");
 	return boost::algorithm::iequals(fileDirectory, directory);
 }
 
-bool FileHelper::checkIfFileExists(string filePath) {
+bool FileHelper::checkIfFileExists(const string& filePath) {
 	return (access(filePath.c_str(), F_OK) != -1);
 }
 
-bool FileHelper::renameFile(string oldPath, string newPath) {
+bool FileHelper::renameFile(const string& oldPath, const string& newPath) {
 	return rename(oldPath.c_str(), newPath.c_str());
 }
 
-void FileHelper::removeFolder(string folder) {
+void FileHelper::removeFolder(const string& folder) {
 	bool success = fs::remove_all(folder.c_str());
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotDeleteDirectory, folder);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotDeleteDirectory, folder);
 }
 
 string FileHelper::getExecutableFileName() {
@@ -625,20 +626,20 @@ vector<string> FileHelper::filterFiles(vector<string> files, string directory) {
 	return filteredFiles;
 }
 
-ofstream FileHelper::makeFile(string filePath, bool createNew) {
+ofstream FileHelper::makeFile(const string& filePath, bool createNew) {
 	return ofstream(filePath.c_str());
 }
 
-void FileHelper::createDirectory(string dirPath) {
+void FileHelper::createDirectory(const string& dirPath) {
 	bool success = boost::filesystem::create_directory(dirPath);
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotCreateDirectory, dirPath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotCreateDirectory, dirPath);
 }
 
 string FileHelper::readFileAsString(string filePath) {
 	ifstream fileStream(filePath);
 	if (fileStream.bad()) {
-		throw InteractBoxException(ErrorCodes::InvalidFileHandle, filePath);
+		throw InteractBoxException(ErrorCodes::ErrorCode::InvalidFileHandle, filePath);
 	}
 	stringstream resultStream;
 	resultStream << fileStream.rdbuf();
@@ -646,7 +647,7 @@ string FileHelper::readFileAsString(string filePath) {
 	return resultStream.str();
 }
 
-void FileHelper::writeToFile(string filePath, string content) {
+void FileHelper::writeToFile(const string& filePath, string content) {
 	ofstream file = makeFile(filePath, false);
 	file.write(content.c_str(), content.length());
 	file.close();
@@ -654,7 +655,7 @@ void FileHelper::writeToFile(string filePath, string content) {
 
 long FileHelper::getFileSize(std::string& path) { return fs::file_size(path); }
 
-bool FileHelper::deleteFile(string fileName) { return fs::remove(fileName.c_str()); }
+bool FileHelper::deleteFile(const string& fileName) { return fs::remove(fileName.c_str()); }
 
 bool FileHelper::copyFile(string oldPath, string newPath) {
 	return boost::filesystem::copy_file(oldPath, newPath);

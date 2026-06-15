@@ -204,13 +204,13 @@ void ProcessHelper::killProcess(const wstring& path, int exitCode) {
 		return;
 	HANDLE handle = OpenProcess(PROCESS_TERMINATE, false, pid);
 	if (handle == NULL)
-		throw InteractBoxException(ErrorCodes::CannotOpenProcess, path);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotOpenProcess, path);
 	bool success = TerminateProcess(handle, exitCode);
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotTerminateProcess, path);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotTerminateProcess, path);
 	success = CloseHandle(handle);
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotCloseHandle, path);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotCloseHandle, path);
 }
 	#endif
 
@@ -244,13 +244,13 @@ void ProcessHelper::killProcess(const string& path, int exitCode) {
 		return;
 	HANDLE handle = OpenProcess(PROCESS_TERMINATE, false, pid);
 	if (handle == NULL)
-		throw InteractBoxException(ErrorCodes::CannotOpenProcess, path);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotOpenProcess, path);
 	bool success = TerminateProcess(handle, exitCode);
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotTerminateProcess, path);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotTerminateProcess, path);
 	success = CloseHandle(handle);
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotCloseHandle, path);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotCloseHandle, path);
 }
 
 void ProcessHelper::killProcess(DWORD pid, int exitCode) {
@@ -258,13 +258,13 @@ void ProcessHelper::killProcess(DWORD pid, int exitCode) {
 		return;
 	HANDLE handle = OpenProcess(PROCESS_TERMINATE, false, pid);
 	if (handle == NULL)
-		throw InteractBoxException(ErrorCodes::CannotOpenProcess);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotOpenProcess);
 	bool success = TerminateProcess(handle, exitCode);
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotTerminateProcess);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotTerminateProcess);
 	success = CloseHandle(handle);
 	if (!success)
-		throw InteractBoxException(ErrorCodes::CannotCloseHandle);
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotCloseHandle);
 }
 
 #else
