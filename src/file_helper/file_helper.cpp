@@ -530,7 +530,7 @@ long FileHelper::getFileSize(HANDLE hFile) {
 	return size;
 }
 
-bool FileHelper::deleteFile(const string& fileName) { return DeleteFileA(fileName); }
+bool FileHelper::deleteFile(const string& fileName) { return DeleteFileA(fileName.c_str()); }
 
 bool FileHelper::copyFile(string oldPath, string newPath) {
 	return CopyFileA(oldPath.c_str(), newPath.c_str(), false);
