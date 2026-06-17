@@ -4,7 +4,9 @@ using namespace std;
 #ifdef WIN32
 
 string FileHelper::getConfigDirectory() {
-	#if WINVER <= _WIN32_WINNT_WINXP
+	#if WINVER == _WIN32_WINNT_NT4
+	return FileHelper::getWindowsDirectory();
+	#elif WINVER <= _WIN32_WINNT_WINXP
 	return FileHelper::getWindowsDirectoryAsString();
 	#else
 	return FileHelper::getAppDataPathAsString() + "\\Interact Box";
