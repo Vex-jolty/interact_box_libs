@@ -7,6 +7,8 @@ std::string InteractBoxException::what() {
 	return codeMessage + " " + message;
 }
 
+ErrorCodes::ErrorCode InteractBoxException::getCode() { return code; }
+
 #ifdef WIN32
 std::string InteractBoxException::windowsErrorCodeToString(DWORD windowsErrorCode) {
 	if (windowsErrorCode == 0)

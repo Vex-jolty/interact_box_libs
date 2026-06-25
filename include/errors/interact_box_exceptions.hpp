@@ -14,6 +14,7 @@ class InteractBoxException : public std::exception {
 				: message(std::to_string(windowsErrorCode)), code(errCode) {}
 #endif
 		std::string what();
+		ErrorCodes::ErrorCode getCode();
 
 	private:
 		std::string message = std::string();
