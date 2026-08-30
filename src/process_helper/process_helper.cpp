@@ -5,7 +5,7 @@ using namespace std;
 #ifdef WIN32
 	#if WINVER > _WIN32_WINNT_NT4
 DWORD ProcessHelper::getProcessId(const wstring& path) {
-	DWORD processId = 0;
+	DWORD processId = DEFAULT_PID;
 	PROCESSENTRY32W entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -24,7 +24,7 @@ DWORD ProcessHelper::getProcessId(const wstring& path) {
 	#endif
 
 DWORD ProcessHelper::getProcessId(const string& path) {
-	DWORD processId = 0;
+	DWORD processId = DEFAULT_PID;
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -50,7 +50,7 @@ DWORD ProcessHelper::getProcessId(const string& path) {
 
 	#if WINVER > _WIN32_WINNT_NT4
 ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> paths) {
-	ProcessPathAndPID processPathAndPID = {L"", 0};
+	ProcessPathAndPID processPathAndPID = { L"", 0 };
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -73,7 +73,7 @@ ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> paths) {
 }
 
 ANSIProcessPathAndPID ProcessHelper::getFirstProcessOfManyANSI(vector<string> paths) {
-	ANSIProcessPathAndPID processPathAndPID = {"", 0};
+	ANSIProcessPathAndPID processPathAndPID = { "", 0 };
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -99,7 +99,7 @@ ANSIProcessPathAndPID ProcessHelper::getFirstProcessOfManyANSI(vector<string> pa
 }
 	#else
 ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> paths) {
-	ProcessPathAndPID processPathAndPID = {"", 0};
+	ProcessPathAndPID processPathAndPID = { "", 0 };
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -123,7 +123,7 @@ ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> paths) {
 
 	#if WINVER > _WIN32_WINNT_NT4
 ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<wstring> paths) {
-	ProcessPathAndPID processPathAndPID = {L"", 0};
+	ProcessPathAndPID processPathAndPID = { L"", 0 };
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -182,7 +182,8 @@ BOOL CALLBACK ProcessHelper::enumDisplayWindows(HWND hwnd, LPARAM lParam) {
 
 HWND ProcessHelper::findMainWindow(const wstring& path) {
 	DWORD processId = getProcessId(path);
-	if (processId == 0) return NULL;
+	if (processId == 0)
+		return NULL;
 	return findMainWindow(processId);
 }
 
@@ -224,7 +225,8 @@ HWND ProcessHelper::findMainWindow(DWORD processId) {
 
 HWND ProcessHelper::findMainWindow(const string& path) {
 	DWORD processId = getProcessId(path);
-	if (processId == 0) return NULL;
+	if (processId == 0)
+		return NULL;
 	return findMainWindow(processId);
 }
 
@@ -240,7 +242,7 @@ void ProcessHelper::setToForeground(const string& file) {
 
 void ProcessHelper::killProcess(const string& path, int exitCode) {
 	DWORD pid = getProcessId(path);
-	if (pid == 0)
+	if (pid == DEFAULT_PID)
 		return;
 	HANDLE handle = OpenProcess(PROCESS_TERMINATE, false, pid);
 	if (handle == NULL)
@@ -254,7 +256,7 @@ void ProcessHelper::killProcess(const string& path, int exitCode) {
 }
 
 void ProcessHelper::killProcess(DWORD pid, int exitCode) {
-	if (pid == 0)
+	if (pid == DEFAULT_PID)
 		return;
 	HANDLE handle = OpenProcess(PROCESS_TERMINATE, false, pid);
 	if (handle == NULL)
@@ -270,34 +272,31 @@ void ProcessHelper::killProcess(DWORD pid, int exitCode) {
 #else
 namespace fs = std::filesystem;
 
-pid_t ProcessHelper::getProcessId(const string& name) {
-	for (const auto& entry : fs::directory_iterator("/proc")) {
-		if (!entry.is_directory())
-			continue;
-
-		const string pidStr = entry.path().filename().string();
-		if (!all_of(pidStr.begin(), pidStr.end(), ::isdigit))
-			continue;
-
-		ifstream commFile(entry.path() / "comm");
-		if (!commFile)
-			continue;
-
-		string comm;
-		getline(commFile, comm);
-
-		if (comm == name) {
-			return static_cast<pid_t>(std::stoi(pidStr));
-		}
+const string ProcessHelper::getOutputFromCommand(const string& command) {
+	array<char, 4096> buffer;
+	string result;
+	unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.c_str(), "r"), pclose);
+	if (!pipe) {
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotOpenProcess, command);
 	}
-	return -1;
+	while (fgets(buffer.data(), static_cast<int>(buffer.size()), pipe.get()) != nullptr) {
+		result += buffer.data();
+	}
+	return result;
+}
+
+pid_t ProcessHelper::getProcessId(const string& name) {
+	const string pidResult = ProcessHelper::getOutputFromCommand("pidof -s " + name);
+	if (pidResult.empty())
+		return DEFAULT_PID;
+	return static_cast<pid_t>(stoi(pidResult));
 }
 
 ProcessPathAndPID ProcessHelper::getFirstProcessOfMany(vector<string> names) {
-	ProcessPathAndPID pathAndId{"", -1};
+	ProcessPathAndPID pathAndId{ "", DEFAULT_PID };
 	for (const auto& name : names) {
 		pid_t pid = getProcessId(name);
-		if (pid == -1)
+		if (pid == DEFAULT_PID)
 			continue;
 		pathAndId.path = name;
 		pathAndId.pid = pid;
@@ -314,6 +313,8 @@ void ProcessHelper::killProcess(pid_t pid) { kill(pid, SIGKILL); }
 
 void ProcessHelper::killProcess(const string& name) {
 	pid_t pid = getProcessId(name);
+	if (pid == DEFAULT_PID)
+		throw InteractBoxException(ErrorCodes::ErrorCode::CannotCloseProcess, name);
 	killProcess(pid);
 }
 

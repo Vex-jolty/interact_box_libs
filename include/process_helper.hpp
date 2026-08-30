@@ -3,6 +3,7 @@
 #include "errors/interact_box_exceptions.hpp"
 #include "string_helper.hpp"
 #include <string>
+#define DEFAULT_PID -1
 #ifdef WIN32
 	#include <winsock2.h>
 	#include <windows.h>
@@ -76,5 +77,6 @@ class ProcessHelper {
 		static void setToForeground(const std::string& path);
 		static void killProcess(const std::string& name);
 		static void killProcess(pid_t pid);
+		static const std::string getOutputFromCommand(const std::string& command);
 #endif
 };
