@@ -1,4 +1,4 @@
-project(index_helper VERSION 1.2.2)
+project(index_helper VERSION 1.2.3)
 
 add_library(
 	${PROJECT_NAME} STATIC ${PROJECT_NAME}.cpp

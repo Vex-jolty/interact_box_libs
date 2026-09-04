@@ -1,4 +1,4 @@
-project(logging_level VERSION 1.2.2)
+project(logging_level VERSION 1.2.3)
 
 # Logging is a static library to avoid conflicts during linking
 add_library(
